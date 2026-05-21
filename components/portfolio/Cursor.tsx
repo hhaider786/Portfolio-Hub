@@ -11,10 +11,17 @@ export default function Cursor() {
   const mx = useMotionValue(-200);
   const my = useMotionValue(-200);
 
+  // Dot — snappy
   const dotX = useSpring(mx, { stiffness: 700, damping: 32 });
   const dotY = useSpring(my, { stiffness: 700, damping: 32 });
+
+  // Ring — lags a little
   const ringX = useSpring(mx, { stiffness: 130, damping: 22 });
   const ringY = useSpring(my, { stiffness: 130, damping: 22 });
+
+  // Glow — lazy, drifts slowly behind cursor
+  const glowX = useSpring(mx, { stiffness: 40, damping: 20 });
+  const glowY = useSpring(my, { stiffness: 40, damping: 20 });
 
   useEffect(() => {
     if (typeof window === "undefined" || "ontouchstart" in window) return;
@@ -52,6 +59,23 @@ export default function Cursor() {
 
   return (
     <>
+      {/* Glow — large soft radial light, lazily follows cursor */}
+      <motion.div
+        className="fixed top-0 left-0 pointer-events-none z-[9990] rounded-full"
+        style={{
+          x: glowX,
+          y: glowY,
+          translateX: "-50%",
+          translateY: "-50%",
+          width: hovering ? 320 : 260,
+          height: hovering ? 320 : 260,
+          background: hovering
+            ? "radial-gradient(circle, rgba(99,102,241,0.13) 0%, rgba(139,92,246,0.05) 50%, transparent 70%)"
+            : "radial-gradient(circle, rgba(99,102,241,0.09) 0%, rgba(99,102,241,0.03) 50%, transparent 70%)",
+          transition: "width 0.4s ease, height 0.4s ease, background 0.4s ease",
+        }}
+      />
+
       {/* Dot — fast */}
       <motion.div
         className="fixed top-0 left-0 z-[9999] pointer-events-none rounded-full"
