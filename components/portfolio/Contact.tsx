@@ -6,7 +6,7 @@ import { Mail, Phone, Briefcase, Code2, MapPin, ArrowUpRight } from "lucide-reac
 const links = [
   { icon: Mail, label: "Email", value: "haidermustafa2012@gmail.com", href: "mailto:haidermustafa2012@gmail.com" },
   { icon: Phone, label: "Phone", value: "+61 435 744 943", href: "tel:+61435744943" },
-  { icon: Briefcase, label: "LinkedIn", value: "linkedin.com/in/haider-mustafa-03104b196", href: "https://linkedin.com/in/haider-mustafa-03104b196" },
+  { icon: Briefcase, label: "LinkedIn", value: "linkedin.com/in/haider-mustafa-03104b196", href: "https://www.linkedin.com/in/muhammad-haider-mustafa-03104b196/" },
   { icon: Code2, label: "GitHub", value: "github.com/hhaider786", href: "https://github.com/hhaider786" },
 ];
 

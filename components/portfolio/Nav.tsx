@@ -51,7 +51,7 @@ export default function Nav() {
               className="text-white/40 hover:text-white transition-colors">
               <Code2 size={16} />
             </a>
-            <a href="https://linkedin.com/in/haider-mustafa-03104b196" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.linkedin.com/in/muhammad-haider-mustafa-03104b196/" target="_blank" rel="noopener noreferrer"
               className="text-white/40 hover:text-white transition-colors">
               <Briefcase size={16} />
             </a>
