@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useScroll, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const vehicles = [
   {
@@ -51,21 +51,24 @@ const vehicles = [
 const SECTION_MULTIPLIER = vehicles.length + 1;
 
 export default function Fleet() {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
-
   useEffect(() => {
-    const unsubscribe = scrollYProgress.on("change", (v) => {
-      const i = Math.floor(v * SECTION_MULTIPLIER);
+    const update = () => {
+      if (!ref.current) return;
+      const rect = ref.current.getBoundingClientRect();
+      const scrolled = -rect.top;
+      const scrollable = rect.height - window.innerHeight;
+      if (scrollable <= 0) return;
+      const progress = Math.max(0, Math.min(1, scrolled / scrollable));
+      const i = Math.floor(progress * SECTION_MULTIPLIER);
       setActiveIndex(Math.max(0, Math.min(vehicles.length - 1, i)));
-    });
-    return unsubscribe;
-  }, [scrollYProgress]);
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+    return () => window.removeEventListener("scroll", update);
+  }, []);
 
   const active = vehicles[activeIndex];
 
@@ -75,17 +78,20 @@ export default function Fleet() {
       ref={ref}
       style={{ height: `${SECTION_MULTIPLIER * 100}vh` }}
     >
-      <div className="sticky top-0 h-screen bg-[#0a0a0a] overflow-hidden">
-
-        {/* ── DESKTOP LAYOUT ── */}
+      {/* overflow:clip preserves clipping without breaking position:sticky */}
+      <div
+        className="sticky top-0 h-screen bg-[#0a0a0a]"
+        style={{ overflow: "clip" }}
+      >
+        {/* ── DESKTOP ── */}
         <div className="hidden md:block absolute inset-0">
-          {/* Left: full-height image panel */}
-          <div className="absolute left-0 top-0 w-[58%] h-full overflow-hidden">
+          <div className="absolute left-0 top-0 w-[58%] h-full" style={{ overflow: "clip" }}>
             <AnimatePresence mode="sync">
               <motion.div
                 key={active.name + "-img"}
-                className="absolute inset-[-4%] bg-cover bg-center"
+                className="absolute bg-cover bg-center"
                 style={{
+                  inset: "-4%",
                   backgroundImage: `url('${active.image}')`,
                   backgroundColor: "#1a1a1a",
                 }}
@@ -95,30 +101,21 @@ export default function Fleet() {
                 transition={{ duration: 0.85, ease: "easeOut" }}
               />
             </AnimatePresence>
-            {/* Fade edge toward right */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#0a0a0a]" />
             <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/40 via-transparent to-[#0a0a0a]/30" />
           </div>
 
-          {/* Right: text panel */}
           <div className="absolute right-0 top-0 w-[46%] h-full flex flex-col justify-center pl-4 pr-16">
-            {/* Section label top-left */}
             <div className="absolute top-10 left-4">
               <span className="section-eyebrow">Our Exclusive Fleet</span>
             </div>
 
-            {/* Counter top-right */}
             <div className="absolute top-10 right-16 font-mono text-sm tracking-widest">
-              <span className="text-[#c9a84c]">
-                {String(activeIndex + 1).padStart(2, "0")}
-              </span>
+              <span className="text-[#c9a84c]">{String(activeIndex + 1).padStart(2, "0")}</span>
               <span className="text-[#333] mx-1">/</span>
-              <span className="text-[#555]">
-                {String(vehicles.length).padStart(2, "0")}
-              </span>
+              <span className="text-[#555]">{String(vehicles.length).padStart(2, "0")}</span>
             </div>
 
-            {/* Vehicle content — AnimatePresence swaps on index change */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeIndex}
@@ -136,7 +133,6 @@ export default function Fleet() {
                 </h2>
                 <span className="gold-line block w-20 mb-7" />
 
-                {/* Specs — staggered on each vehicle change */}
                 <div className="space-y-3 mb-8">
                   {active.specs.map((spec, si) => (
                     <motion.div
@@ -152,7 +148,6 @@ export default function Fleet() {
                   ))}
                 </div>
 
-                {/* Price */}
                 <div className="flex items-baseline gap-2 mb-7">
                   <span
                     className="text-[#c9a84c] text-4xl font-bold"
@@ -172,7 +167,6 @@ export default function Fleet() {
               </motion.div>
             </AnimatePresence>
 
-            {/* Progress dots */}
             <div className="absolute bottom-10 left-4 flex items-center gap-2.5">
               {vehicles.map((_, i) => (
                 <div
@@ -187,24 +181,19 @@ export default function Fleet() {
               ))}
             </div>
 
-            {/* Scroll hint */}
             <div className="absolute bottom-10 right-16 text-[#333] text-[0.65rem] tracking-[0.25em] uppercase">
               Scroll to explore
             </div>
           </div>
         </div>
 
-        {/* ── MOBILE LAYOUT ── */}
+        {/* ── MOBILE ── */}
         <div className="md:hidden absolute inset-0">
-          {/* Full-screen image */}
           <AnimatePresence mode="sync">
             <motion.div
               key={active.name + "-mob"}
               className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: `url('${active.image}')`,
-                backgroundColor: "#1a1a1a",
-              }}
+              style={{ backgroundImage: `url('${active.image}')`, backgroundColor: "#1a1a1a" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -213,14 +202,12 @@ export default function Fleet() {
           </AnimatePresence>
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/65 to-[#0a0a0a]/20" />
 
-          {/* Counter */}
           <div className="absolute top-6 right-6 font-mono text-sm tracking-widest">
             <span className="text-[#c9a84c]">{String(activeIndex + 1).padStart(2, "0")}</span>
             <span className="text-[#444] mx-1">/</span>
             <span className="text-[#666]">{String(vehicles.length).padStart(2, "0")}</span>
           </div>
 
-          {/* Text at bottom */}
           <div className="absolute bottom-0 left-0 right-0 px-6 pb-14">
             <AnimatePresence mode="wait">
               <motion.div
@@ -255,8 +242,6 @@ export default function Fleet() {
                 </a>
               </motion.div>
             </AnimatePresence>
-
-            {/* Dots */}
             <div className="flex items-center gap-2 mt-5">
               {vehicles.map((_, i) => (
                 <div
@@ -272,7 +257,6 @@ export default function Fleet() {
             </div>
           </div>
         </div>
-
       </div>
     </section>
   );
