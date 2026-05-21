@@ -47,7 +47,7 @@ html { scroll-behavior: smooth; }
   min-height: 100vh;
   background: #0a0a0a;
   color: #ffffff;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 .chauffeur-root .section-eyebrow {
   font-size: 0.7rem;
@@ -72,7 +72,7 @@ html { scroll-behavior: smooth; }
   min-height: 100vh;
   background: #ffffff;
   color: #111111;
-  overflow-x: hidden;
+  overflow-x: clip;
   font-family: var(--font-dm-sans-var), sans-serif;
 }
 .ecommerce-root .section-label {
@@ -93,7 +93,7 @@ html { scroll-behavior: smooth; }
   min-height: 100vh;
   background: #12100a;
   color: #f5ead8;
-  overflow-x: hidden;
+  overflow-x: clip;
   font-family: var(--font-lato-var), sans-serif;
 }
 .cafe-root .section-eyebrow {

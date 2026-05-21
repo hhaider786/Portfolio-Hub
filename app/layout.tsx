@@ -27,7 +27,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       lang="en"
       className={`${inter.variable} ${syne.variable} ${playfair.variable} ${cormorant.variable} ${dmSans.variable} ${lato.variable}`}
     >
-      <body className="antialiased overflow-x-hidden">{children}</body>
+      <body className="antialiased overflow-x-clip">{children}</body>
     </html>
   );
 }
