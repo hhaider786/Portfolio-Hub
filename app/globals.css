@@ -50,7 +50,9 @@
 
 /* ─── Shared utilities ───────────────────────────────────────── */
 html { scroll-behavior: smooth; }
-* { cursor: none !important; }
+
+/* Hide default cursor only on portfolio page — demo sites use normal cursor */
+.portfolio-root * { cursor: none !important; }
 
 .marquee-track {
   display: flex;
