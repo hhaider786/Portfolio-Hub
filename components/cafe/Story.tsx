@@ -17,9 +17,7 @@ export default function Story() {
           <div
             className="w-full h-[480px] bg-cover bg-center"
             style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=90')",
-              backgroundColor: "#1a1208",
+              background: "url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=90') center/cover no-repeat, linear-gradient(135deg,#1a1008,#2d1a10)",
             }}
           />
           <div className="absolute -bottom-5 -right-5 w-36 h-36 border border-[#d4a853]/25 hidden md:block" />

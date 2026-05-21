@@ -23,8 +23,7 @@ export default function Hero() {
         className="absolute inset-[-10%] z-0 bg-cover bg-center"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=90')",
-          backgroundColor: "#1a1a1a",
+            "url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=90') center/cover no-repeat, linear-gradient(135deg,#0a0a18,#1a1030)",
           y: bgY,
           scale: bgScale,
         }}

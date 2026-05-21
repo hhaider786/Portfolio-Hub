@@ -122,9 +122,8 @@ export default function About() {
             <div
               className="w-full h-96 bg-cover bg-center"
               style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800&q=80')",
-                backgroundColor: "#1a1a1a",
+                background:
+                  "url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=800&q=80') center/cover no-repeat, linear-gradient(135deg,#0a0a14,#12101e)",
               }}
             />
             <div className="absolute -bottom-6 -right-6 w-40 h-40 border border-[#c9a84c]/30 hidden md:block" />

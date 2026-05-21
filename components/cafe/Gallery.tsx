@@ -53,7 +53,7 @@ export default function Gallery() {
             >
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                style={{ backgroundImage: `url('${img.src}')`, background: img.fallback }}
+                style={{ background: `url('${img.src}') center/cover no-repeat, ${img.fallback}` }}
               />
               <div className="absolute inset-0 bg-[#12100a]/0 group-hover:bg-[#12100a]/40 transition-all duration-300 flex items-center justify-center">
                 <ZoomIn size={24} className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

@@ -100,8 +100,7 @@ export default function Fleet() {
                 className="absolute bg-cover bg-center"
                 style={{
                   inset: "-4%",
-                  backgroundImage: `url('${active.image}')`,
-                  background: active.fallback,
+                  background: `url('${active.image}') center/cover no-repeat, ${active.fallback}`,
                 }}
                 initial={{ opacity: 0, scale: 1.06 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -201,7 +200,7 @@ export default function Fleet() {
             <motion.div
               key={active.name + "-mob"}
               className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url('${active.image}')`, background: active.fallback }}
+              style={{ background: `url('${active.image}') center/cover no-repeat, ${active.fallback}` }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}

@@ -1,85 +1,104 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 
-const skillGroups = [
+const skillRows = [
   {
-    category: "Languages & Frameworks",
+    label: "Languages & Frameworks",
     color: "#6366f1",
-    icon: "⚡",
+    direction: "left" as const,
     skills: [
-      { name: "TypeScript / JavaScript", level: 90 },
-      { name: "React 18 / Next.js 16", level: 92 },
-      { name: "C# / ASP.NET Core 10", level: 85 },
-      { name: "Java / Spring Boot", level: 82 },
-      { name: "Python / FastAPI", level: 80 },
+      "TypeScript", "JavaScript (ES2024)", "React 18", "Next.js 16",
+      "C# / ASP.NET Core 10", "Java / Spring Boot", "Python / FastAPI",
+      "Flask", "SQL", "HTML / CSS",
     ],
   },
   {
-    category: "Databases & Data",
+    label: "Databases & Data",
     color: "#06b6d4",
-    icon: "🗄️",
+    direction: "right" as const,
     skills: [
-      { name: "SQL Server / PostgreSQL", level: 85 },
-      { name: "MongoDB / NoSQL", level: 78 },
-      { name: "Entity Framework Core", level: 82 },
-      { name: "Hibernate ORM", level: 75 },
-      { name: "PowerBI / OData v4", level: 70 },
+      "SQL Server 2022", "PostgreSQL / PostGIS", "MongoDB", "SQLite",
+      "Entity Framework Core", "Hibernate ORM", "PowerBI OData v4",
+      "Redis", "Prisma", "Supabase",
     ],
   },
   {
-    category: "AI & Machine Learning",
+    label: "AI & Machine Learning",
     color: "#8b5cf6",
-    icon: "🧠",
+    direction: "left" as const,
     skills: [
-      { name: "Google Gemini API / RAG", level: 80 },
-      { name: "ChromaDB / Vector Search", level: 75 },
-      { name: "scikit-learn / XGBoost", level: 72 },
-      { name: "NLP / SentenceTransformers", level: 74 },
-      { name: "GeoPandas / ESDA / PySAL", level: 78 },
+      "Google Gemini API", "ChromaDB", "RAG Systems", "scikit-learn",
+      "XGBoost", "NLP", "SentenceTransformers", "GeoPandas",
+      "PySAL / ESDA", "Moran's I / LISA",
     ],
   },
   {
-    category: "Security & DevOps",
+    label: "Security & DevOps",
     color: "#ef4444",
-    icon: "🔐",
+    direction: "right" as const,
     skills: [
-      { name: "OWASP Top 10 / Hardening", level: 85 },
-      { name: "Azure Entra ID / MSAL", level: 80 },
-      { name: "X.509 / PKI / JWT", level: 82 },
-      { name: "Docker / Docker Compose", level: 85 },
-      { name: "GitHub Actions CI/CD", level: 80 },
+      "OWASP Top 10", "Azure Entra ID / MSAL", "JWT", "PBKDF2",
+      "X.509 / PKI", "RBAC", "Docker / Compose", "GitHub Actions",
+      "Penetration Testing", "HSTS / CSP / XFO",
     ],
   },
 ];
 
-function SkillBar({ name, level, color, delay }: { name: string; level: number; color: string; delay: number }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-50px" });
+function SkillMarquee({
+  skills, color, direction,
+}: {
+  skills: string[]; color: string; direction: "left" | "right";
+}) {
+  const doubled = [...skills, ...skills];
+  const isRight = direction === "right";
 
   return (
-    <div ref={ref} className="group">
-      <div className="flex items-center justify-between mb-1.5">
-        <span className="text-white/60 text-xs tracking-wide group-hover:text-white/80 transition-colors">{name}</span>
-        <motion.span
-          className="text-[0.65rem] font-mono font-medium"
-          style={{ color }}
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: delay + 0.4 }}
-        >
-          {level}%
-        </motion.span>
-      </div>
-      <div className="h-1 bg-white/5 rounded-full overflow-hidden">
-        <motion.div
-          className="h-full rounded-full"
-          style={{ background: `linear-gradient(90deg, ${color}, ${color}88)` }}
-          initial={{ width: 0 }}
-          animate={inView ? { width: `${level}%` } : {}}
-          transition={{ duration: 1.1, delay, ease: [0.33, 1, 0.68, 1] }}
-        />
+    <div
+      className="overflow-hidden py-1 group"
+      style={{ maskImage: "linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%)" }}
+    >
+      <div
+        className="flex gap-3 w-max"
+        style={{
+          animation: `${isRight ? "marqueeRight" : "marquee"} ${22 + skills.length * 1.5}s linear infinite`,
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLElement).style.animationPlayState = "paused";
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLElement).style.animationPlayState = "running";
+        }}
+      >
+        {doubled.map((skill, i) => (
+          <span
+            key={i}
+            className="flex-shrink-0 px-4 py-2 text-sm font-medium transition-all duration-200 hover:scale-105"
+            style={{
+              border: `1px solid ${color}20`,
+              background: `${color}0c`,
+              color: `${color}cc`,
+              borderRadius: "2px",
+              cursor: "default",
+            }}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.background = `${color}22`;
+              el.style.borderColor = `${color}60`;
+              el.style.color = color;
+              el.style.boxShadow = `0 0 16px ${color}30`;
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.background = `${color}0c`;
+              el.style.borderColor = `${color}20`;
+              el.style.color = `${color}cc`;
+              el.style.boxShadow = "none";
+            }}
+          >
+            {skill}
+          </span>
+        ))}
       </div>
     </div>
   );
@@ -87,15 +106,14 @@ function SkillBar({ name, level, color, delay }: { name: string; level: number; 
 
 export default function Skills() {
   return (
-    <section id="skills" className="py-24 px-6" style={{ background: "#0a0a16" }}>
-      <div className="max-w-6xl mx-auto">
+    <section id="skills" className="py-24" style={{ background: "#0a0a16" }}>
+      <div className="max-w-6xl mx-auto px-6 mb-14">
         <motion.div
-          className="mb-14"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <p className="text-[#6366f1] text-xs tracking-[0.3em] uppercase mb-3">What I Know</p>
+          <p className="text-[#6366f1] text-xs tracking-[0.3em] uppercase mb-3">What I Work With</p>
           <h2
             className="text-4xl md:text-5xl font-bold text-white"
             style={{ fontFamily: "var(--font-syne-var), sans-serif" }}
@@ -103,42 +121,41 @@ export default function Skills() {
             Technical Skills
           </h2>
         </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {skillGroups.map((group, gi) => (
-            <motion.div
-              key={group.category}
-              className="bg-white/2 border border-white/6 p-7 hover:border-white/10 transition-all duration-300 shine"
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: gi * 0.1 }}
-            >
-              <div className="flex items-center gap-3 mb-6">
-                <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center text-base"
-                  style={{ background: `${group.color}18`, border: `1px solid ${group.color}30` }}
-                >
-                  {group.icon}
-                </div>
-                <h3 className="text-white/80 text-sm font-medium tracking-wide">{group.category}</h3>
-              </div>
-
-              <div className="space-y-4">
-                {group.skills.map((skill, si) => (
-                  <SkillBar
-                    key={skill.name}
-                    name={skill.name}
-                    level={skill.level}
-                    color={group.color}
-                    delay={gi * 0.1 + si * 0.08}
-                  />
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
       </div>
+
+      <div className="space-y-4">
+        {skillRows.map((row, i) => (
+          <motion.div
+            key={row.label}
+            initial={{ opacity: 0, x: row.direction === "left" ? -30 : 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.1, duration: 0.5 }}
+          >
+            {/* Row label */}
+            <div className="px-6 mb-2 max-w-6xl mx-auto">
+              <span
+                className="text-[0.6rem] tracking-[0.25em] uppercase font-medium"
+                style={{ color: `${row.color}80` }}
+              >
+                {row.label}
+              </span>
+            </div>
+            <SkillMarquee skills={row.skills} color={row.color} direction={row.direction} />
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Bottom note */}
+      <motion.p
+        className="text-center text-white/20 text-xs mt-12 tracking-wider px-6"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.5 }}
+      >
+        Hover any tag to highlight · rows pause on hover
+      </motion.p>
     </section>
   );
 }

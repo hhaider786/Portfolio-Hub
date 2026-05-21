@@ -17,8 +17,7 @@ export default function Hero() {
         className="absolute inset-[-10%] hero-zoom bg-cover bg-center"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=90')",
-          backgroundColor: "#1a1208",
+          "url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1920&q=90') center/cover no-repeat, linear-gradient(135deg,#1a0d08,#2d1810)",
           y: bgY,
         }}
       />

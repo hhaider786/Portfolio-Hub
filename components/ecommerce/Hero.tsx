@@ -9,9 +9,8 @@ export default function Hero() {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1920&q=90')",
-          backgroundColor: "#d0c8c0",
+          background:
+            "url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1920&q=90') center/cover no-repeat, linear-gradient(135deg,#2a2520,#1a1510)",
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-[#111]/70 via-[#111]/30 to-transparent" />

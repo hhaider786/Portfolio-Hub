@@ -80,8 +80,7 @@ export default function Features() {
             key={active.title + "-bg"}
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage: `url('${active.image}')`,
-              background: active.fallback,
+              background: `url('${active.image}') center/cover no-repeat, ${active.fallback}`,
             }}
             initial={{ opacity: 0, scale: 1.04 }}
             animate={{ opacity: 0.3, scale: 1 }}
@@ -103,8 +102,7 @@ export default function Features() {
                 key={active.title + "-left"}
                 className="absolute inset-0 bg-cover bg-center"
                 style={{
-                  backgroundImage: `url('${active.image}')`,
-                  backgroundColor: "#1a1a1a",
+                  background: `url('${active.image}') center/cover no-repeat, ${active.fallback}`,
                 }}
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -222,8 +220,7 @@ export default function Features() {
                 key={active.title + "-mob-img"}
                 className="absolute inset-0 bg-cover bg-center"
                 style={{
-                  backgroundImage: `url('${active.image}')`,
-                  backgroundColor: "#1a1a1a",
+                  background: `url('${active.image}') center/cover no-repeat, ${active.fallback}`,
                 }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.6 }}
