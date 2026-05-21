@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* ─── Animations ─────────────────────────────────────────────── */
+/* ─── Keyframes ──────────────────────────────────────────────── */
 @keyframes shimmer {
   0%   { background-position: -200% center; }
   100% { background-position:  200% center; }
@@ -13,17 +13,40 @@
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }
 }
+@keyframes orbFloat1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%     { transform: translate(70px,-50px) scale(1.08); }
+  66%     { transform: translate(-30px,35px) scale(0.93); }
+}
+@keyframes orbFloat2 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%     { transform: translate(-55px,65px) scale(0.92); }
+  66%     { transform: translate(45px,-30px) scale(1.06); }
+}
+@keyframes orbFloat3 {
+  0%,100% { transform: translate(0,0); }
+  50%     { transform: translate(30px,-50px); }
+}
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+@keyframes gradientShift {
+  0%,100% { background-position: 0% 50%; }
+  50%     { background-position: 100% 50%; }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
 
 /* ─── Shared utilities ───────────────────────────────────────── */
 html { scroll-behavior: smooth; }
+* { cursor: none !important; }
 
 .marquee-track {
   display: flex;
@@ -32,6 +55,124 @@ html { scroll-behavior: smooth; }
 }
 .marquee-wrapper:hover .marquee-track { animation-play-state: paused; }
 .hero-zoom { animation: slowZoom 12s ease-in-out infinite alternate; transform-origin: center; }
+.animate-blink { animation: blink 1s step-end infinite; }
+.animate-spin-slow { animation: spin-slow 8s linear infinite; }
+
+/* ─── Portfolio background orbs ─────────────────────────────── */
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  pointer-events: none;
+}
+.orb-1 {
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(99,102,241,0.13) 0%, transparent 70%);
+  top: -250px; left: -200px;
+  animation-name: orbFloat1;
+  animation-duration: 20s;
+}
+.orb-2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(139,92,246,0.10) 0%, transparent 70%);
+  bottom: -150px; right: -100px;
+  animation-name: orbFloat2;
+  animation-duration: 17s;
+}
+.orb-3 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%);
+  top: 45%; left: 55%;
+  animation-name: orbFloat3;
+  animation-duration: 13s;
+  animation-direction: alternate;
+}
+
+/* Subtle noise texture overlay */
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+/* Grid overlay */
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(99,102,241,1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99,102,241,1) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.025;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 5s ease infinite;
+}
+
+/* Glitch effect */
+.glitch {
+  position: relative;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+.glitch:hover::before {
+  opacity: 0.7;
+  transform: translate(-2px, 1px);
+  color: #06b6d4;
+  clip-path: polygon(0 15%, 100% 15%, 100% 40%, 0 40%);
+  animation: none;
+}
+.glitch:hover::after {
+  opacity: 0.7;
+  transform: translate(2px, -1px);
+  color: #8b5cf6;
+  clip-path: polygon(0 60%, 100% 60%, 100% 85%, 0 85%);
+}
+
+/* Card tilt — applied via JS, just set transform-style here */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+.tilt-card:hover {
+  box-shadow: 0 30px 60px rgba(99,102,241,0.15);
+}
+
+/* Shine sweep on hover */
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+.shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.06) 50%, transparent 75%);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+.shine:hover::after {
+  transform: translateX(100%);
+}
 
 /* ─── Portfolio (root /) ─────────────────────────────────────── */
 .portfolio-root {
@@ -40,7 +181,6 @@ html { scroll-behavior: smooth; }
   color: #f8fafc;
   font-family: var(--font-inter-var), sans-serif;
 }
-.portfolio-root .accent { color: #6366f1; }
 
 /* ─── Chauffeur (/chauffeur) ─────────────────────────────────── */
 .chauffeur-root {
@@ -50,15 +190,11 @@ html { scroll-behavior: smooth; }
   overflow-x: clip;
 }
 .chauffeur-root .section-eyebrow {
-  font-size: 0.7rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #c9a84c;
-  font-weight: 500;
+  font-size: 0.7rem; letter-spacing: 0.3em;
+  text-transform: uppercase; color: #c9a84c; font-weight: 500;
 }
 .chauffeur-root .gold-line {
-  display: block;
-  height: 1px;
+  display: block; height: 1px;
   background: linear-gradient(90deg, transparent, #c9a84c, transparent);
 }
 .chauffeur-root .shimmer-gold {
@@ -69,18 +205,12 @@ html { scroll-behavior: smooth; }
 
 /* ─── Ecommerce (/ecommerce) ─────────────────────────────────── */
 .ecommerce-root {
-  min-height: 100vh;
-  background: #ffffff;
-  color: #111111;
-  overflow-x: clip;
-  font-family: var(--font-dm-sans-var), sans-serif;
+  min-height: 100vh; background: #ffffff; color: #111111;
+  overflow-x: clip; font-family: var(--font-dm-sans-var), sans-serif;
 }
 .ecommerce-root .section-label {
-  font-size: 0.65rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: #888888;
-  font-weight: 500;
+  font-size: 0.65rem; letter-spacing: 0.3em;
+  text-transform: uppercase; color: #888888; font-weight: 500;
 }
 .ecommerce-root .btn-dark { background: #111; color: #fff; transition: background .25s; }
 .ecommerce-root .btn-dark:hover { background: #2a2a2a; }
@@ -90,27 +220,19 @@ html { scroll-behavior: smooth; }
 
 /* ─── Cafe (/cafe) ───────────────────────────────────────────── */
 .cafe-root {
-  min-height: 100vh;
-  background: #12100a;
-  color: #f5ead8;
-  overflow-x: clip;
-  font-family: var(--font-lato-var), sans-serif;
+  min-height: 100vh; background: #12100a; color: #f5ead8;
+  overflow-x: clip; font-family: var(--font-lato-var), sans-serif;
 }
 .cafe-root .section-eyebrow {
-  font-size: 0.65rem;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: #d4a853;
-  font-weight: 500;
+  font-size: 0.65rem; letter-spacing: 0.35em;
+  text-transform: uppercase; color: #d4a853; font-weight: 500;
 }
 .cafe-root .amber-line {
-  display: block;
-  height: 1px;
+  display: block; height: 1px;
   background: linear-gradient(90deg, transparent, #d4a853, transparent);
 }
 .cafe-root .shimmer-amber {
   background: linear-gradient(90deg, #d4a853 0%, #e8c278 45%, #d4a853 100%);
-  background-size: 200% auto;
-  animation: shimmer 2.5s linear infinite;
+  background-size: 200% auto; animation: shimmer 2.5s linear infinite;
 }
 .cafe-root .marquee-track { animation-duration: 45s; }

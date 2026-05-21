@@ -10,8 +10,8 @@ const features = [
     title: "Handcrafted Leather",
     description:
       "Every surface is upholstered in hand-selected, full-grain leather. Individually stitched by master craftsmen — no two interiors are identical.",
-    image:
-      "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1400&q=90",
+    image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=1400&q=90",
+    fallback: "linear-gradient(135deg,#0a0814,#160e24)",
     accent: "Leather & Suede",
   },
   {
@@ -20,8 +20,8 @@ const features = [
     title: "Four-Zone Climate",
     description:
       "Intelligent multi-zone climate control maintains an ideal environment for every passenger, independently — pre-cooled or heated before you even board.",
-    image:
-      "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1400&q=90",
+    image: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1400&q=90",
+    fallback: "linear-gradient(135deg,#080c14,#0d1620)",
     accent: "Climate Control",
   },
   {
@@ -30,8 +30,8 @@ const features = [
     title: "Starlight Ceiling",
     description:
       "Over 1,000 hand-finished fiber-optic lights recreate a private night sky above you — transforming every journey into a truly intimate experience.",
-    image:
-      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1400&q=90",
+    image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1400&q=90",
+    fallback: "linear-gradient(135deg,#050510,#0a0a20)",
     accent: "Fiber Optics",
   },
   {
@@ -40,8 +40,8 @@ const features = [
     title: "Crystal Audio",
     description:
       "Bespoke speaker systems from Burmester, Naim, or Bowers & Wilkins fill the cabin with studio-quality sound — music the way the artist intended.",
-    image:
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=90",
+    image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=1400&q=90",
+    fallback: "linear-gradient(135deg,#080a10,#10141e)",
     accent: "Premium Audio",
   },
 ];
@@ -81,7 +81,7 @@ export default function Features() {
             className="absolute inset-0 bg-cover bg-center"
             style={{
               backgroundImage: `url('${active.image}')`,
-              backgroundColor: "#111",
+              background: active.fallback,
             }}
             initial={{ opacity: 0, scale: 1.04 }}
             animate={{ opacity: 0.3, scale: 1 }}

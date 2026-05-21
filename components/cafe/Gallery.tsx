@@ -5,14 +5,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn } from "lucide-react";
 
 const images = [
-  { src: "https://images.unsplash.com/photo-1540189549336-e6e99eb4b951?w=700&q=90", alt: "Signature dish" },
-  { src: "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=700&q=90", alt: "Restaurant interior" },
-  { src: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=700&q=90", alt: "Bar ambiance" },
-  { src: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=700&q=90", alt: "Chef's creation" },
-  { src: "https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=700&q=90", alt: "Plated dish" },
-  { src: "https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=700&q=90", alt: "Coffee ritual" },
-  { src: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=700&q=90", alt: "Pasta special" },
-  { src: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=700&q=90", alt: "Table setting" },
+  { src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=90", alt: "Signature dish", fallback: "linear-gradient(135deg,#1a0d08,#2d1a0d)" },
+  { src: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=700&q=90", alt: "Restaurant interior", fallback: "linear-gradient(135deg,#0f0a06,#1a1008)" },
+  { src: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=700&q=90", alt: "Bar ambiance", fallback: "linear-gradient(135deg,#120d08,#201510)" },
+  { src: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=700&q=90", alt: "Chef's creation", fallback: "linear-gradient(135deg,#1a0e08,#2a1810)" },
+  { src: "https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=700&q=90", alt: "Plated dish", fallback: "linear-gradient(135deg,#0f0c08,#1a1510)" },
+  { src: "https://images.unsplash.com/photo-1493770348161-369560ae357d?w=700&q=90", alt: "Coffee ritual", fallback: "linear-gradient(135deg,#1a100a,#2d1a10)" },
+  { src: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=700&q=90", alt: "Pasta special", fallback: "linear-gradient(135deg,#1a0f08,#281808)" },
+  { src: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=700&q=90", alt: "Table setting", fallback: "linear-gradient(135deg,#100d08,#1a1510)" },
 ];
 
 const heights = ["h-64", "h-80", "h-56", "h-72", "h-80", "h-60", "h-76", "h-64"];
@@ -53,7 +53,7 @@ export default function Gallery() {
             >
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                style={{ backgroundImage: `url('${img.src}')`, backgroundColor: "#1a1208" }}
+                style={{ backgroundImage: `url('${img.src}')`, background: img.fallback }}
               />
               <div className="absolute inset-0 bg-[#12100a]/0 group-hover:bg-[#12100a]/40 transition-all duration-300 flex items-center justify-center">
                 <ZoomIn size={24} className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

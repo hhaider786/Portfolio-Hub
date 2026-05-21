@@ -8,35 +8,40 @@ const vehicles = [
     name: "Rolls-Royce Phantom",
     class: "Ultra Luxury",
     specs: ["6.75L V12 Engine", "5 Passengers", "Starlight Headliner", "Bespoke Leather"],
-    image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&q=90",
+    image: "https://images.unsplash.com/photo-1493238792000-8113da705763?w=1200&q=90",
+    fallback: "linear-gradient(135deg,#0a0a18,#1a1030)",
     price: "$300",
   },
   {
     name: "Mercedes S-Class",
     class: "Executive",
     specs: ["3.0L Inline-6", "4 Passengers", "Burmester Sound", "Massage Seats"],
-    image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&q=90",
+    image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=1200&q=90",
+    fallback: "linear-gradient(135deg,#0d0a14,#1a1020)",
     price: "$180",
   },
   {
     name: "Bentley Flying Spur",
     class: "Grand Tourer",
     specs: ["6.0L W12 Engine", "4 Passengers", "Diamond Stitching", "Naim Audio"],
-    image: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&q=90",
+    image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200&q=90",
+    fallback: "linear-gradient(135deg,#0a1018,#0d1a2e)",
     price: "$250",
   },
   {
     name: "Cadillac Escalade",
     class: "SUV Luxury",
     specs: ["6.2L V8 Engine", "6 Passengers", '35" Display', "AKG Sound"],
-    image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200&q=90",
+    image: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1200&q=90",
+    fallback: "linear-gradient(135deg,#0f0a0a,#1a1010)",
     price: "$200",
   },
   {
     name: "Mercedes V-Class",
     class: "Group Luxury",
     specs: ["2.0L Diesel", "7 Passengers", "Executive Seating", "Conference Setup"],
-    image: "https://images.unsplash.com/photo-1574023278046-e7f25c9028ee?w=1200&q=90",
+    image: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=1200&q=90",
+    fallback: "linear-gradient(135deg,#080810,#121220)",
     price: "$160",
   },
   {
@@ -44,11 +49,14 @@ const vehicles = [
     class: "Executive",
     specs: ["3.0L Inline-6", "4 Passengers", "Bowers & Wilkins", "Sky Lounge Roof"],
     image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=1200&q=90",
+    fallback: "linear-gradient(135deg,#0a0a14,#10102a)",
     price: "$150",
   },
 ];
 
 const SECTION_MULTIPLIER = vehicles.length + 1;
+
+type Vehicle = typeof vehicles[0];
 
 export default function Fleet() {
   const ref = useRef<HTMLElement>(null);
@@ -93,7 +101,7 @@ export default function Fleet() {
                 style={{
                   inset: "-4%",
                   backgroundImage: `url('${active.image}')`,
-                  backgroundColor: "#1a1a1a",
+                  background: active.fallback,
                 }}
                 initial={{ opacity: 0, scale: 1.06 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -193,7 +201,7 @@ export default function Fleet() {
             <motion.div
               key={active.name + "-mob"}
               className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url('${active.image}')`, backgroundColor: "#1a1a1a" }}
+              style={{ backgroundImage: `url('${active.image}')`, background: active.fallback }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
