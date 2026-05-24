@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { ViewTransitionLink } from "@/lib/motion/ViewTransitionLink";
+import { Tilt3D } from "@/lib/motion/Tilt3D";
 
 const demos = [
   {
@@ -13,10 +14,10 @@ const demos = [
     description:
       "Scroll-driven animations, pinned fleet showcase where vehicles crossfade as you scroll, parallax hero, animated features section.",
     tag: "Hospitality & Transport",
-    tagColor: "#c9a84c",
+    tagColor: "#e5c158",
     preview: {
       bg: "#0a0a0a",
-      accent: "#c9a84c",
+      accent: "#e5c158",
       topText: "PRESTIGE CHAUFFEUR",
       line1: "Arrive in Silence.",
       line2: "Depart in Style.",
@@ -28,15 +29,15 @@ const demos = [
     route: "/ecommerce",
     stack: ["React Context", "Framer Motion", "Filters"],
     description:
-      "Cart drawer, live product filters, hover image swap, animated categories grid. Full mock checkout flow.",
+      "Cart drawer with localStorage persistence, live product filters, hover image swap, animated categories grid, View Transition product detail.",
     tag: "Retail & Ecommerce",
-    tagColor: "#111111",
+    tagColor: "#9ca3af",
     preview: {
       bg: "#f5f5f5",
       accent: "#111",
       topText: "MAISON",
       line1: "The New Season Edit.",
-      line2: "Spring / Summer 2025",
+      line2: "Spring / Summer 2026",
     },
   },
   {
@@ -45,12 +46,12 @@ const demos = [
     route: "/cafe",
     stack: ["AnimatePresence", "Masonry Gallery", "Framer Motion"],
     description:
-      "Animated tabbed menu, masonry photo gallery with lightbox, reservation form with confirmation state.",
+      "Animated tabbed menu, masonry photo gallery with full keyboard lightbox, reservation form with confirmation state.",
     tag: "Food & Hospitality",
-    tagColor: "#d4a853",
+    tagColor: "#e8be63",
     preview: {
       bg: "#12100a",
-      accent: "#d4a853",
+      accent: "#e8be63",
       topText: "LUMIÈRE",
       line1: "Where Every Bite",
       line2: "Tells a Story.",
@@ -64,11 +65,11 @@ function SitePreview({ preview }: { preview: (typeof demos)[0]["preview"] }) {
     <div
       className="relative overflow-hidden border-b border-white/5"
       style={{ background: preview.bg, height: "180px" }}
+      aria-hidden
     >
-      {/* Fake nav bar */}
       <div
         className="flex items-center justify-between px-4 py-2.5 border-b"
-        style={{ borderColor: `${preview.accent}18` }}
+        style={{ borderColor: `${preview.accent}22` }}
       >
         <span
           className="text-[0.55rem] tracking-[0.3em] font-bold"
@@ -77,8 +78,8 @@ function SitePreview({ preview }: { preview: (typeof demos)[0]["preview"] }) {
           {preview.topText}
         </span>
         <div className="flex gap-3">
-          {["·", "·", "·", "·"].map((d, i) => (
-            <span key={i} className="text-[0.55rem]" style={{ color: `${preview.accent}55` }}>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <span key={i} className="text-[0.55rem]" style={{ color: `${preview.accent}66` }}>
               Menu
             </span>
           ))}
@@ -91,7 +92,6 @@ function SitePreview({ preview }: { preview: (typeof demos)[0]["preview"] }) {
         </div>
       </div>
 
-      {/* Fake hero */}
       <div className="flex flex-col items-center justify-center" style={{ height: "calc(100% - 36px)" }}>
         <span
           className="text-[0.5rem] tracking-[0.3em] uppercase mb-2 block"
@@ -124,7 +124,7 @@ function SitePreview({ preview }: { preview: (typeof demos)[0]["preview"] }) {
 
 export default function DemoSites() {
   return (
-    <section id="work" className="py-24 px-6 relative" style={{ background: "#08080f" }}>
+    <section id="demos" className="py-24 px-6 relative section-cv" style={{ background: "#08080f" }}>
       <div className="max-w-6xl mx-auto">
         <motion.div
           className="mb-14"
@@ -132,79 +132,85 @@ export default function DemoSites() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <p className="text-[#6366f1] text-xs tracking-[0.3em] uppercase mb-3">Live Demos</p>
+          <p className="text-[#6366f1] text-xs tracking-[0.3em] uppercase mb-3">Live demos</p>
           <h2
             className="text-4xl md:text-5xl font-bold text-white mb-3"
             style={{ fontFamily: "var(--font-syne-var), sans-serif" }}
           >
             Client-Ready Websites
           </h2>
-          <p className="text-white/35 max-w-lg text-sm leading-relaxed">
+          <p className="text-white/50 max-w-lg text-sm leading-relaxed">
             Click any card to explore the full site — built to the same standard I deliver to real clients.
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {demos.map((demo, i) => (
-            <motion.a
+            <motion.div
               key={demo.route}
-              href={demo.route}
-              className="group block border border-white/6 bg-white/[0.01] hover:border-[#6366f1]/40 transition-all duration-400 overflow-hidden relative"
-              style={{ transformStyle: "preserve-3d" }}
               initial={{ opacity: 0, y: 32 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.12, duration: 0.5 }}
-              whileHover={{ y: -4 }}
             >
-              {/* Preview window */}
-              <SitePreview preview={demo.preview} />
+              <Tilt3D max={5} className="rounded-sm overflow-hidden">
+                <ViewTransitionLink
+                  href={demo.route}
+                  className="group block border border-white/8 bg-white/[0.01] hover:border-[#6366f1]/50 transition-all duration-400 overflow-hidden relative"
+                  aria-label={`Open ${demo.title} — ${demo.subtitle}`}
+                >
+                  <SitePreview preview={demo.preview} />
 
-              {/* Content */}
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <span
-                      className="text-[0.55rem] tracking-[0.15em] uppercase px-2 py-0.5 mb-2 inline-block"
-                      style={{ color: demo.tagColor === "#111111" ? "#555" : demo.tagColor, background: `${demo.tagColor === "#111111" ? "#111" : demo.tagColor}14`, border: `1px solid ${demo.tagColor === "#111111" ? "#111" : demo.tagColor}25` }}
-                    >
-                      {demo.tag}
-                    </span>
-                    <h3
-                      className="text-white font-semibold text-lg leading-snug"
-                      style={{ fontFamily: "var(--font-syne-var), sans-serif" }}
-                    >
-                      {demo.title}
-                    </h3>
-                    <p className="text-white/30 text-xs">{demo.subtitle}</p>
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <span
+                          className="text-[0.55rem] tracking-[0.15em] uppercase px-2 py-0.5 mb-2 inline-block"
+                          style={{
+                            color: demo.tagColor,
+                            background: `${demo.tagColor}1a`,
+                            border: `1px solid ${demo.tagColor}33`,
+                          }}
+                        >
+                          {demo.tag}
+                        </span>
+                        <h3
+                          className="text-white font-semibold text-lg leading-snug"
+                          style={{ fontFamily: "var(--font-syne-var), sans-serif" }}
+                        >
+                          {demo.title}
+                        </h3>
+                        <p className="text-white/45 text-xs">{demo.subtitle}</p>
+                      </div>
+                      <ArrowUpRight
+                        size={18}
+                        aria-hidden
+                        className="text-white/25 group-hover:text-[#6366f1] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all mt-1 flex-shrink-0"
+                      />
+                    </div>
+
+                    <p className="text-white/55 text-sm leading-relaxed mb-4">{demo.description}</p>
+
+                    <div className="flex flex-wrap gap-1.5">
+                      {demo.stack.map((s) => (
+                        <span
+                          key={s}
+                          className="text-[0.58rem] tracking-wide uppercase px-2 py-0.5 text-[#a5b4fc]"
+                          style={{ background: "rgba(99,102,241,0.09)", border: "1px solid rgba(99,102,241,0.2)" }}
+                        >
+                          {s}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  <ArrowUpRight
-                    size={18}
-                    className="text-white/15 group-hover:text-[#6366f1] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all mt-1 flex-shrink-0"
+
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+                    style={{ background: "linear-gradient(135deg, rgba(99,102,241,0.04), transparent)" }}
                   />
-                </div>
-
-                <p className="text-white/38 text-sm leading-relaxed mb-4">{demo.description}</p>
-
-                <div className="flex flex-wrap gap-1.5">
-                  {demo.stack.map((s) => (
-                    <span
-                      key={s}
-                      className="text-[0.58rem] tracking-wide uppercase px-2 py-0.5 text-[#818cf8]"
-                      style={{ background: "rgba(99,102,241,0.07)", border: "1px solid rgba(99,102,241,0.14)" }}
-                    >
-                      {s}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Hover glow */}
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
-                style={{ background: "linear-gradient(135deg, rgba(99,102,241,0.03), transparent)" }}
-              />
-            </motion.a>
+                </ViewTransitionLink>
+              </Tilt3D>
+            </motion.div>
           ))}
         </div>
       </div>

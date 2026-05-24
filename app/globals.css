@@ -31,17 +31,9 @@
   0%,100% { transform: translate(0,0); }
   50%     { transform: translate(30px,-50px); }
 }
-@keyframes scanline {
-  0%   { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
-}
 @keyframes gradientShift {
   0%,100% { background-position: 0% 50%; }
   50%     { background-position: 100% 50%; }
-}
-@keyframes marqueeRight {
-  from { transform: translateX(-50%); }
-  to   { transform: translateX(0); }
 }
 @keyframes spin-slow {
   from { transform: rotate(0deg); }
@@ -51,8 +43,43 @@
 /* ─── Shared utilities ───────────────────────────────────────── */
 html { scroll-behavior: smooth; }
 
-/* Hide default cursor only on portfolio page — demo sites use normal cursor */
-.portfolio-root * { cursor: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .orb, .hero-zoom, .gradient-text { animation: none !important; }
+}
+
+:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.section-cv {
+  content-visibility: auto;
+  contain-intrinsic-size: 800px;
+}
+
+/* Hide default cursor only when the custom cursor is active (fine pointer, no keyboard focus). */
+@media (hover: hover) and (pointer: fine) {
+  body[data-cursor="on"] *:not(input):not(textarea):not(select) { cursor: none !important; }
+}
 
 .marquee-track {
   display: flex;
@@ -63,6 +90,13 @@ html { scroll-behavior: smooth; }
 .hero-zoom { animation: slowZoom 12s ease-in-out infinite alternate; transform-origin: center; }
 .animate-blink { animation: blink 1s step-end infinite; }
 .animate-spin-slow { animation: spin-slow 8s linear infinite; }
+
+/* View transitions */
+::view-transition-old(demo-card),
+::view-transition-new(demo-card) {
+  animation-duration: 500ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
 
 /* ─── Portfolio background orbs ─────────────────────────────── */
 .orb {
@@ -96,7 +130,6 @@ html { scroll-behavior: smooth; }
   animation-direction: alternate;
 }
 
-/* Subtle noise texture overlay */
 .noise-overlay {
   position: absolute;
   inset: 0;
@@ -107,7 +140,6 @@ html { scroll-behavior: smooth; }
   background-size: 200px 200px;
 }
 
-/* Grid overlay */
 .grid-overlay {
   position: absolute;
   inset: 0;
@@ -119,7 +151,6 @@ html { scroll-behavior: smooth; }
   opacity: 0.025;
 }
 
-/* Gradient text */
 .gradient-text {
   background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
   background-size: 200% 200%;
@@ -129,45 +160,7 @@ html { scroll-behavior: smooth; }
   animation: gradientShift 5s ease infinite;
 }
 
-/* Glitch effect */
-.glitch {
-  position: relative;
-}
-.glitch::before,
-.glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-}
-.glitch:hover::before {
-  opacity: 0.7;
-  transform: translate(-2px, 1px);
-  color: #06b6d4;
-  clip-path: polygon(0 15%, 100% 15%, 100% 40%, 0 40%);
-  animation: none;
-}
-.glitch:hover::after {
-  opacity: 0.7;
-  transform: translate(2px, -1px);
-  color: #8b5cf6;
-  clip-path: polygon(0 60%, 100% 60%, 100% 85%, 0 85%);
-}
-
-/* Card tilt — applied via JS, just set transform-style here */
-.tilt-card {
-  transform-style: preserve-3d;
-  transition: transform 0.5s ease, box-shadow 0.5s ease;
-}
-.tilt-card:hover {
-  box-shadow: 0 30px 60px rgba(99,102,241,0.15);
-}
-
-/* Shine sweep on hover */
-.shine {
-  position: relative;
-  overflow: hidden;
-}
+.shine { position: relative; overflow: hidden; }
 .shine::after {
   content: '';
   position: absolute;
@@ -176,9 +169,7 @@ html { scroll-behavior: smooth; }
   transform: translateX(-100%);
   transition: transform 0.5s ease;
 }
-.shine:hover::after {
-  transform: translateX(100%);
-}
+.shine:hover::after { transform: translateX(100%); }
 
 /* ─── Portfolio (root /) ─────────────────────────────────────── */
 .portfolio-root {
@@ -197,14 +188,14 @@ html { scroll-behavior: smooth; }
 }
 .chauffeur-root .section-eyebrow {
   font-size: 0.7rem; letter-spacing: 0.3em;
-  text-transform: uppercase; color: #c9a84c; font-weight: 500;
+  text-transform: uppercase; color: #e5c158; font-weight: 500;
 }
 .chauffeur-root .gold-line {
   display: block; height: 1px;
-  background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+  background: linear-gradient(90deg, transparent, #e5c158, transparent);
 }
 .chauffeur-root .shimmer-gold {
-  background: linear-gradient(90deg, #c9a84c 0%, #e8c96a 45%, #c9a84c 100%);
+  background: linear-gradient(90deg, #e5c158 0%, #f5dc8a 45%, #e5c158 100%);
   background-size: 200% auto;
   animation: shimmer 2.5s linear infinite;
 }
@@ -212,11 +203,11 @@ html { scroll-behavior: smooth; }
 /* ─── Ecommerce (/ecommerce) ─────────────────────────────────── */
 .ecommerce-root {
   min-height: 100vh; background: #ffffff; color: #111111;
-  overflow-x: clip; font-family: var(--font-dm-sans-var), sans-serif;
+  overflow-x: clip; font-family: var(--font-inter-var), sans-serif;
 }
 .ecommerce-root .section-label {
   font-size: 0.65rem; letter-spacing: 0.3em;
-  text-transform: uppercase; color: #888888; font-weight: 500;
+  text-transform: uppercase; color: #666666; font-weight: 500;
 }
 .ecommerce-root .btn-dark { background: #111; color: #fff; transition: background .25s; }
 .ecommerce-root .btn-dark:hover { background: #2a2a2a; }
@@ -227,18 +218,18 @@ html { scroll-behavior: smooth; }
 /* ─── Cafe (/cafe) ───────────────────────────────────────────── */
 .cafe-root {
   min-height: 100vh; background: #12100a; color: #f5ead8;
-  overflow-x: clip; font-family: var(--font-lato-var), sans-serif;
+  overflow-x: clip; font-family: var(--font-inter-var), sans-serif;
 }
 .cafe-root .section-eyebrow {
   font-size: 0.65rem; letter-spacing: 0.35em;
-  text-transform: uppercase; color: #d4a853; font-weight: 500;
+  text-transform: uppercase; color: #e8be63; font-weight: 500;
 }
 .cafe-root .amber-line {
   display: block; height: 1px;
-  background: linear-gradient(90deg, transparent, #d4a853, transparent);
+  background: linear-gradient(90deg, transparent, #e8be63, transparent);
 }
 .cafe-root .shimmer-amber {
-  background: linear-gradient(90deg, #d4a853 0%, #e8c278 45%, #d4a853 100%);
+  background: linear-gradient(90deg, #e8be63 0%, #f4d889 45%, #e8be63 100%);
   background-size: 200% auto; animation: shimmer 2.5s linear infinite;
 }
 .cafe-root .marquee-track { animation-duration: 45s; }

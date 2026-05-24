@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef } from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, Code2 } from "lucide-react";
+import { Code2 } from "lucide-react";
+import { Tilt3D } from "@/lib/motion/Tilt3D";
 
 const projects = [
   {
@@ -75,46 +75,9 @@ const projects = [
   },
 ];
 
-function TiltCard({ children, className }: { children: React.ReactNode; className: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  const onMove = (e: React.MouseEvent) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    el.style.transform = `perspective(1000px) rotateX(${y * -10}deg) rotateY(${x * 10}deg) translateZ(8px)`;
-  };
-
-  const onLeave = () => {
-    if (ref.current) {
-      ref.current.style.transition = "transform 0.6s ease";
-      ref.current.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)";
-    }
-  };
-
-  const onEnter = () => {
-    if (ref.current) ref.current.style.transition = "none";
-  };
-
-  return (
-    <div
-      ref={ref}
-      className={className}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      onMouseEnter={onEnter}
-      style={{ transformStyle: "preserve-3d", transition: "transform 0.6s ease" }}
-    >
-      {children}
-    </div>
-  );
-}
-
 export default function Projects() {
   return (
-    <section id="projects" className="py-24 px-6" style={{ background: "#0a0a16" }}>
+    <section id="projects" className="py-24 px-6 section-cv" style={{ background: "#0a0a16" }}>
       <div className="max-w-6xl mx-auto">
         <motion.div
           className="mb-14"
@@ -122,7 +85,7 @@ export default function Projects() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <p className="text-[#6366f1] text-xs tracking-[0.3em] uppercase mb-3">What I&apos;ve Built</p>
+          <p className="text-[#6366f1] text-xs tracking-[0.3em] uppercase mb-3">What I&apos;ve built</p>
           <h2
             className="text-4xl md:text-5xl font-bold text-white"
             style={{ fontFamily: "var(--font-syne-var), sans-serif" }}
@@ -140,66 +103,67 @@ export default function Projects() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
             >
-              <TiltCard className="tilt-card bg-white/2 border border-white/6 p-7 h-full flex flex-col shine">
-                {/* Header */}
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span
-                        className="w-2 h-2 rounded-full flex-shrink-0"
-                        style={{ background: project.statusColor }}
-                      />
-                      <span className="text-[0.6rem] tracking-[0.15em] uppercase" style={{ color: project.statusColor }}>
-                        {project.status}
-                      </span>
-                      <span className="text-white/20 text-[0.6rem]">·</span>
-                      <span className="text-white/25 text-[0.6rem] tracking-wider">{project.category}</span>
+              <Tilt3D max={6} className="relative bg-white/[0.02] border border-white/8 p-7 h-full overflow-hidden shine rounded-sm">
+                <article className="flex flex-col h-full">
+                  <header className="flex items-start justify-between gap-3 mb-3">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span
+                          className="w-2 h-2 rounded-full flex-shrink-0"
+                          style={{ background: project.statusColor }}
+                          aria-hidden
+                        />
+                        <span className="text-[0.6rem] tracking-[0.15em] uppercase" style={{ color: project.statusColor }}>
+                          {project.status}
+                        </span>
+                        <span className="text-white/25 text-[0.6rem]" aria-hidden>·</span>
+                        <span className="text-white/35 text-[0.6rem] tracking-wider">{project.category}</span>
+                      </div>
+                      <h3
+                        className="text-white font-semibold leading-snug text-[1.05rem]"
+                        style={{ fontFamily: "var(--font-syne-var), sans-serif" }}
+                      >
+                        {project.name}
+                      </h3>
                     </div>
-                    <h3
-                      className="text-white font-semibold leading-snug text-[1.05rem]"
-                      style={{ fontFamily: "var(--font-syne-var), sans-serif" }}
-                    >
-                      {project.name}
-                    </h3>
+                    <div className="flex items-center gap-2 flex-shrink-0 mt-1">
+                      <span className="text-white/30 text-xs font-mono">{project.year}</span>
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${project.name} on GitHub`}
+                        className="text-white/30 hover:text-[#6366f1] transition-colors"
+                      >
+                        <Code2 size={14} aria-hidden />
+                      </a>
+                    </div>
+                  </header>
+
+                  <p className="text-white/55 text-sm leading-relaxed mb-4 flex-1">{project.description}</p>
+
+                  <ul className="space-y-1 mb-5">
+                    {project.highlights.map((h) => (
+                      <li key={h} className="flex items-start gap-2 text-xs text-white/45">
+                        <span className="text-[#6366f1]/60 mt-0.5 flex-shrink-0" aria-hidden>›</span>
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/5" aria-label={`Tech stack: ${project.stack.join(", ")}`}>
+                    {project.stack.map((s) => (
+                      <span
+                        key={s}
+                        className="text-[0.6rem] tracking-wide px-2 py-0.5 border text-[#a5b4fc]"
+                        style={{ background: "rgba(99,102,241,0.08)", borderColor: "rgba(99,102,241,0.2)" }}
+                      >
+                        {s}
+                      </span>
+                    ))}
                   </div>
-                  <div className="flex items-center gap-2 flex-shrink-0 mt-1">
-                    <span className="text-white/20 text-xs font-mono">{project.year}</span>
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white/20 hover:text-[#6366f1] transition-colors"
-                    >
-                      <Code2 size={14} />
-                    </a>
-                  </div>
-                </div>
-
-                <p className="text-white/40 text-sm leading-relaxed mb-4 flex-1">{project.description}</p>
-
-                {/* Highlights */}
-                <ul className="space-y-1 mb-5">
-                  {project.highlights.map((h) => (
-                    <li key={h} className="flex items-start gap-2 text-xs text-white/30">
-                      <span className="text-[#6366f1]/50 mt-0.5 flex-shrink-0">›</span>
-                      {h}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Stack */}
-                <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/5">
-                  {project.stack.map((s) => (
-                    <span
-                      key={s}
-                      className="text-[0.6rem] tracking-wide px-2 py-0.5 border text-[#818cf8]"
-                      style={{ background: "rgba(99,102,241,0.06)", borderColor: "rgba(99,102,241,0.15)" }}
-                    >
-                      {s}
-                    </span>
-                  ))}
-                </div>
-              </TiltCard>
+                </article>
+              </Tilt3D>
             </motion.div>
           ))}
         </div>
