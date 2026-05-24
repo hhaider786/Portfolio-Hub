@@ -1,10 +1,29 @@
+﻿"use client";
+
 import { Phone, Mail, MapPin, Globe, MessageCircle, Share2 } from "lucide-react";
+import { motion } from "framer-motion";
+import { MagneticButton } from "@/lib/motion/MagneticButton";
+
+const containerVariants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
+};
+const colVariant = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
+};
 
 export default function Footer() {
   return (
     <footer id="contact" className="bg-[#080808] border-t border-[#c9a84c]/10">
-      <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-4 gap-10">
-        <div className="md:col-span-1">
+      <motion.div
+        className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-4 gap-10"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.1 }}
+      >
+        <motion.div className="md:col-span-1" variants={colVariant}>
           <div className="mb-5">
             <p
               className="text-2xl font-bold tracking-[0.15em] text-white"
@@ -22,18 +41,20 @@ export default function Footer() {
           </p>
           <div className="flex gap-3">
             {[Globe, MessageCircle, Share2].map((Icon, i) => (
-              <a
+              <MagneticButton
                 key={i}
+                as="a"
                 href="#"
+                pull={8}
                 className="w-9 h-9 border border-[#c9a84c]/20 flex items-center justify-center text-[#888] hover:text-[#c9a84c] hover:border-[#c9a84c]/60 transition-all duration-300"
               >
                 <Icon size={15} />
-              </a>
+              </MagneticButton>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        <div>
+        <motion.div variants={colVariant}>
           <h4 className="text-white text-sm font-semibold tracking-[0.2em] uppercase mb-5">
             Quick Links
           </h4>
@@ -49,9 +70,9 @@ export default function Footer() {
               </li>
             ))}
           </ul>
-        </div>
+        </motion.div>
 
-        <div>
+        <motion.div variants={colVariant}>
           <h4 className="text-white text-sm font-semibold tracking-[0.2em] uppercase mb-5">
             Services
           </h4>
@@ -73,9 +94,9 @@ export default function Footer() {
               </li>
             ))}
           </ul>
-        </div>
+        </motion.div>
 
-        <div>
+        <motion.div variants={colVariant}>
           <h4 className="text-white text-sm font-semibold tracking-[0.2em] uppercase mb-5">
             Contact
           </h4>
@@ -100,11 +121,17 @@ export default function Footer() {
               </p>
             </li>
           </ul>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       <div className="border-t border-[#c9a84c]/10">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-3">
+        <motion.div
+          className="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-3"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
           <p className="text-[#555] text-xs tracking-wider">
             © 2025 Prestige Chauffeur. All rights reserved.
           </p>
@@ -119,16 +146,18 @@ export default function Footer() {
               </a>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
 
       <div className="fixed bottom-6 right-6 z-50 md:hidden">
-        <a
+        <MagneticButton
+          as="a"
           href="#booking"
+          pull={10}
           className="shimmer-gold px-5 py-3 text-black text-xs font-bold tracking-[0.2em] uppercase shadow-lg"
         >
           Book Now
-        </a>
+        </MagneticButton>
       </div>
     </footer>
   );

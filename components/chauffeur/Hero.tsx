@@ -89,6 +89,29 @@ export default function Hero() {
             Explore Our Fleet
           </a>
         </motion.div>
+
+        {/* Mobile stats — shown below CTAs on small screens, desktop uses the fixed bottom bar */}
+        <motion.div
+          className="grid grid-cols-2 gap-0 border border-[#c9a84c]/15 mt-10 md:hidden w-full max-w-xs mx-auto"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.1, duration: 0.5 }}
+        >
+          {[
+            { value: "15+", label: "Years" },
+            { value: "500+", label: "Clients" },
+            { value: "50+", label: "Vehicles" },
+            { value: "24/7", label: "Service" },
+          ].map((s, i) => (
+            <div
+              key={s.label}
+              className={`py-4 text-center ${i % 2 === 0 ? "border-r border-[#c9a84c]/15" : ""} ${i < 2 ? "border-b border-[#c9a84c]/15" : ""}`}
+            >
+              <div className="text-[#c9a84c] text-xl font-bold" style={{ fontFamily: "var(--font-playfair-var), Georgia, serif" }}>{s.value}</div>
+              <div className="text-[#666] text-[0.6rem] tracking-widest uppercase mt-0.5">{s.label}</div>
+            </div>
+          ))}
+        </motion.div>
       </motion.div>
 
       {/* Scroll indicator */}
@@ -110,7 +133,7 @@ export default function Hero() {
 
       {/* Stats bar — fixed at bottom of hero, no parallax */}
       <motion.div
-        className="absolute bottom-0 left-0 right-0 z-10 border-t border-[#c9a84c]/10 bg-[#0a0a0a]/80 backdrop-blur-sm hidden md:flex"
+        className="hero-stats-bar absolute bottom-0 left-0 right-0 z-10 border-t border-[#c9a84c]/10 bg-[#0a0a0a]/80 backdrop-blur-sm hidden md:flex"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.0, duration: 0.6 }}

@@ -8,22 +8,25 @@ import Projects from "@/components/portfolio/Projects";
 import Contact from "@/components/portfolio/Contact";
 import Cursor from "@/components/portfolio/Cursor";
 import ScrollProgress from "@/components/portfolio/ScrollProgress";
+import SmoothScroll from "@/components/portfolio/SmoothScroll";
 
 export default function PortfolioPage() {
   return (
-    <div className="portfolio-root">
-      <Cursor />
-      <ScrollProgress />
-      <Nav />
-      <main id="main">
-        <Hero />
-        <DemoSites />
-        <Process />
-        <Skills />
-        <Experience />
-        <Projects />
-        <Contact />
-      </main>
-    </div>
+    <SmoothScroll>
+      <div className="portfolio-root">
+        <Cursor />
+        <ScrollProgress />
+        <Nav />
+        <main id="main">
+          <Hero />
+          <DemoSites />
+          <Process />
+          <Skills />
+          <Experience />
+          <Projects />
+          <Contact />
+        </main>
+      </div>
+    </SmoothScroll>
   );
 }

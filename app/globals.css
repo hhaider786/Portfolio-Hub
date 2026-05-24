@@ -13,6 +13,10 @@
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
+@keyframes marqueeRight {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }
@@ -39,6 +43,40 @@
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
+@keyframes scanBeam {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateX(500%); opacity: 0; }
+}
+@keyframes badgePulse {
+  0%, 100% { box-shadow: none; opacity: 1; }
+  50%      { box-shadow: 0 0 18px var(--badge-color, rgba(99,102,241,0.5)); opacity: 0.85; }
+}
+@keyframes heroParticle {
+  0%,100% { transform: translate(0,0) scale(1);   opacity: 0.35; }
+  33%     { transform: translate(var(--px,20px), var(--py,-30px)) scale(1.3); opacity: 0.6; }
+  66%     { transform: translate(var(--nx,-15px), var(--ny,10px)) scale(0.8); opacity: 0.2; }
+}
+
+/* ─── Conic border animation ─────────────────────────────────── */
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes rotateBorder {
+  to { --angle: 360deg; }
+}
+
+/* ─── Touch & Mobile Globals ────────────────────────────────── */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+a, button, [role="button"], input, select, textarea, label {
+  touch-action: manipulation;
+}
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
 
 /* ─── Shared utilities ───────────────────────────────────────── */
 html { scroll-behavior: smooth; }
@@ -84,7 +122,7 @@ html { scroll-behavior: smooth; }
 .marquee-track {
   display: flex;
   width: max-content;
-  animation: marquee 50s linear infinite;
+  /* animation set inline per-row in Skills.tsx */
 }
 .marquee-wrapper:hover .marquee-track { animation-play-state: paused; }
 .hero-zoom { animation: slowZoom 12s ease-in-out infinite alternate; transform-origin: center; }
@@ -102,31 +140,32 @@ html { scroll-behavior: smooth; }
 .orb {
   position: absolute;
   border-radius: 9999px;
-  filter: blur(90px);
+  filter: blur(60px);
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
   pointer-events: none;
+  will-change: transform;
 }
 .orb-1 {
-  width: 700px; height: 700px;
-  background: radial-gradient(circle, rgba(99,102,241,0.13) 0%, transparent 70%);
-  top: -250px; left: -200px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(99,102,241,0.11) 0%, transparent 70%);
+  top: -200px; left: -150px;
   animation-name: orbFloat1;
-  animation-duration: 20s;
+  animation-duration: 22s;
 }
 .orb-2 {
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(139,92,246,0.10) 0%, transparent 70%);
-  bottom: -150px; right: -100px;
+  width: 380px; height: 380px;
+  background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%);
+  bottom: -120px; right: -80px;
   animation-name: orbFloat2;
-  animation-duration: 17s;
+  animation-duration: 19s;
 }
 .orb-3 {
-  width: 350px; height: 350px;
-  background: radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%);
+  width: 260px; height: 260px;
+  background: radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%);
   top: 45%; left: 55%;
   animation-name: orbFloat3;
-  animation-duration: 13s;
+  animation-duration: 15s;
   animation-direction: alternate;
 }
 
@@ -172,10 +211,39 @@ html { scroll-behavior: smooth; }
 }
 .shine:hover::after { transform: translateX(100%); }
 
-/* Project card lift + glow on hover */
+/* ─── Skills scanner beam ────────────────────────────────────── */
+.skills-row-scanner {
+  position: relative;
+  overflow: hidden;
+}
+.skills-row-scanner::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 30%; height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%);
+  animation: scanBeam 4.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+  will-change: transform;
+}
+
+/* ─── Conic animated gradient border (project cards hover) ───── */
+.conic-border {
+  border: 1px solid transparent !important;
+  background-image:
+    linear-gradient(#0d0d1a, #0d0d1a),
+    conic-gradient(from var(--angle), #6366f1, #8b5cf6, #06b6d4, #6366f1);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  animation: rotateBorder 3s linear infinite;
+}
+
+/* ─── Project card lift + glow on hover ─────────────────────── */
 .project-card-wrap { perspective: 1000px; }
 .project-card {
   transition: box-shadow 0.45s ease, border-color 0.45s ease, background 0.45s ease;
+  border-radius: 16px;
 }
 .project-card-wrap:hover .project-card {
   box-shadow: 0 28px 60px -12px rgba(99,102,241,0.28), 0 12px 24px -8px rgba(139,92,246,0.18);
@@ -183,10 +251,12 @@ html { scroll-behavior: smooth; }
   background: rgba(99,102,241,0.04);
 }
 
-/* Demo site card glow on hover */
+/* ─── Demo site card glow on hover ──────────────────────────── */
 .demo-card-wrap { perspective: 1000px; }
 .demo-card {
   transition: box-shadow 0.45s ease, border-color 0.45s ease;
+  border-radius: 16px;
+  overflow: hidden;
 }
 .demo-card-wrap:hover .demo-card {
   box-shadow: 0 30px 60px -12px rgba(99,102,241,0.3), 0 16px 28px -10px rgba(139,92,246,0.18);
@@ -255,3 +325,109 @@ html { scroll-behavior: smooth; }
   background-size: 200% auto; animation: shimmer 2.5s linear infinite;
 }
 .cafe-root .marquee-track { animation-duration: 45s; }
+
+/* ─── floatFrame keyframe (shared) ──────────────────────────── */
+@keyframes floatFrame {
+  0%, 100% { transform: translate(0, 0); }
+  50%       { transform: translate(3px, -4px); }
+}
+
+/* ─── Chauffeur: Testimonial card hover (inside CSS marquee) ── */
+.chauffeur-root .chauffeur-testimonial-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 1rem;
+}
+.chauffeur-root .chauffeur-testimonial-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 48px -8px rgba(201,168,76,0.22), 0 4px 16px -4px rgba(201,168,76,0.08);
+}
+
+/* ─── Chauffeur: Focus underline sweep ───────────────────────── */
+.chauffeur-root .chauffeur-input-wrap { position: relative; }
+.chauffeur-root .chauffeur-input-wrap::after {
+  content: ''; position: absolute; bottom: 0; left: 50%; right: 50%;
+  height: 2px; background: #c9a84c;
+  transition: left 0.3s ease, right 0.3s ease; pointer-events: none;
+}
+.chauffeur-root .chauffeur-input-wrap:focus-within::after { left: 0; right: 0; }
+
+/* ─── Chauffeur: Floating labels ─────────────────────────────── */
+.chauffeur-root .chauffeur-floating-label {
+  position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+  font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: #555; pointer-events: none;
+  transition: transform 0.25s ease, color 0.25s ease;
+  transform-origin: left center;
+}
+.chauffeur-root .chauffeur-input { padding-top: 1.5rem; padding-bottom: 0.5rem; }
+.chauffeur-root .chauffeur-input:focus ~ .chauffeur-floating-label,
+.chauffeur-root .chauffeur-input:not(:placeholder-shown) ~ .chauffeur-floating-label {
+  transform: translateY(-1rem) scale(0.8); color: #c9a84c;
+}
+
+/* ─── Ecommerce: Focus underline sweep ───────────────────────── */
+.ecommerce-root .ecommerce-input-wrap { position: relative; }
+.ecommerce-root .ecommerce-input-wrap::after {
+  content: ''; position: absolute; bottom: 0; left: 50%; right: 50%;
+  height: 2px; background: #111;
+  transition: left 0.28s ease, right 0.28s ease; pointer-events: none;
+}
+.ecommerce-root .ecommerce-input-wrap:focus-within::after { left: 0; right: 0; }
+.ecommerce-root .ecommerce-newsletter .ecommerce-input-wrap::after { background: #fff; }
+
+/* ─── Ecommerce: Footer link underline hover ─────────────────── */
+.ecommerce-root .ecommerce-footer-link { position: relative; display: inline-block; }
+.ecommerce-root .ecommerce-footer-link::after {
+  content: ''; position: absolute; left: 0; bottom: -1px;
+  width: 0; height: 1px; background: #111; transition: width 0.25s ease;
+}
+.ecommerce-root .ecommerce-footer-link:hover::after { width: 100%; }
+
+/* ─── Cafe: Review card hover (inside CSS marquee) ───────────── */
+.cafe-root .cafe-review-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease; border-radius: 1rem;
+}
+.cafe-root .cafe-review-card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 20px 50px -8px rgba(232,190,99,0.2), 0 4px 18px -4px rgba(232,190,99,0.1);
+}
+
+/* ─── Cafe: Focus underline sweep ────────────────────────────── */
+.cafe-root .cafe-input-wrap { position: relative; }
+.cafe-root .cafe-input-wrap::after {
+  content: ''; position: absolute; bottom: 0; left: 50%; right: 50%;
+  height: 2px; background: #e8be63;
+  transition: left 0.28s ease, right 0.28s ease; pointer-events: none;
+}
+.cafe-root .cafe-input-wrap:focus-within::after { left: 0; right: 0; }
+
+/* ─── Cafe: Floating labels ──────────────────────────────────── */
+.cafe-root .cafe-floating-label {
+  position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+  font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: #b8a380; pointer-events: none;
+  transition: transform 0.25s ease, color 0.25s ease;
+  transform-origin: left center;
+}
+.cafe-root .cafe-input { padding-top: 1.5rem; padding-bottom: 0.5rem; }
+.cafe-root .cafe-input:focus ~ .cafe-floating-label,
+.cafe-root .cafe-input:not(:placeholder-shown) ~ .cafe-floating-label {
+  transform: translateY(-1rem) scale(0.82); color: #e8be63;
+}
+
+/* ─── Cafe: Footer link underline hover ──────────────────────── */
+.cafe-root .cafe-footer-link { position: relative; display: inline-block; }
+.cafe-root .cafe-footer-link::after {
+  content: ''; position: absolute; left: 0; bottom: -1px;
+  width: 0; height: 1px; background: #e8be63; transition: width 0.25s ease;
+}
+.cafe-root .cafe-footer-link:hover::after { width: 100%; }
+
+/* ─── Cafe: Decorative frame float ───────────────────────────── */
+.cafe-root .cafe-frame-deco { animation: floatFrame 6s ease-in-out infinite; }
+.cafe-root .cafe-frame-deco-alt { animation: floatFrame 8s ease-in-out infinite reverse; }
+
+/* ─── Chauffeur: Hero stats bar iOS safe area ─────────────────── */
+.chauffeur-root .hero-stats-bar {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}

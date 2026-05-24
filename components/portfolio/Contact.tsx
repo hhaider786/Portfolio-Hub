@@ -72,6 +72,7 @@ export default function Contact() {
                     aria-invalid={!!err}
                     aria-describedby={err ? `${f.id}-err` : undefined}
                     className="w-full bg-black/30 border border-white/10 text-white px-3 py-2.5 text-sm focus:outline-none focus:border-[#6366f1] transition-colors"
+                    suppressHydrationWarning
                   />
                   {err && <p id={`${f.id}-err`} role="alert" className="text-red-400 text-xs mt-1">{err}</p>}
                 </div>
@@ -106,6 +107,7 @@ export default function Contact() {
               type="submit"
               disabled={pending}
               className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#6366f1] text-white text-xs tracking-[0.15em] uppercase font-medium hover:bg-[#4f52d8] transition-colors disabled:opacity-60"
+              suppressHydrationWarning
             >
               <Send size={13} aria-hidden />
               {pending ? "Sending…" : "Send message"}

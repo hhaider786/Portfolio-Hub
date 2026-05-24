@@ -1,64 +1,79 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState } from "react";
 import { motion } from "framer-motion";
+import { subscribeNewsletter } from "@/app/(ecommerce-demo)/ecommerce/actions/newsletter";
+import type { ActionResult } from "@/lib/actions/validation";
+import { MaskedText } from "@/lib/motion/MaskedText";
+import { MagneticButton } from "@/lib/motion/MagneticButton";
+
+const initialState: ActionResult = { status: "idle" };
 
 export default function Newsletter() {
-  const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) setSubmitted(true);
-  };
+  const [state, formAction, pending] = useActionState(subscribeNewsletter, initialState);
+  const error = state.status === "error" ? state.errors?.find((e) => e.field === "email")?.message ?? state.message : null;
 
   return (
-    <section className="bg-[#111] py-20 px-6">
+    <section className="bg-[#111] py-20 px-6 ecommerce-newsletter">
       <div className="max-w-2xl mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <p className="text-[#888] text-[0.65rem] tracking-[0.3em] uppercase mb-3">Join the Edit</p>
-          <h2
-            className="text-4xl md:text-5xl font-light text-white mb-3"
-            style={{ fontFamily: "var(--font-cormorant-var), Georgia, serif" }}
-          >
-            Get 15% Off Your First Order
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <p className="text-[#aaa] text-[0.65rem] tracking-[0.3em] uppercase mb-3">Join the Edit</p>
+          <h2 className="text-4xl md:text-5xl font-light text-white mb-3" style={{ fontFamily: "var(--font-cormorant-var), Georgia, serif" }}>
+            <MaskedText delay={0.15} stagger={0.07} duration={1}>Get 15% Off Your First Order</MaskedText>
           </h2>
-          <p className="text-[#666] text-sm mb-8">
+          <p className="text-[#999] text-sm mb-8">
             Subscribe for early access to new collections, exclusive offers, and style inspiration.
           </p>
 
-          {submitted ? (
+          {state.status === "success" ? (
             <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              role="status"
+              aria-live="polite"
               className="text-white text-sm tracking-wider"
             >
-              ✓ &nbsp; Thank you — your discount code is on its way.
+              ✓ &nbsp; {state.message}
             </motion.p>
           ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-0 max-w-md mx-auto">
-              <input
-                type="email"
-                required
-                placeholder="Your email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 bg-white/5 border border-white/15 text-white placeholder-[#555] px-4 py-3.5 text-sm focus:outline-none focus:border-white/40 transition-colors"
-              />
-              <button
+            <form action={formAction} className="flex flex-col sm:flex-row gap-0 max-w-md mx-auto" noValidate>
+              <label htmlFor="newsletter-email" className="sr-only">Email address</label>
+              <div className="ecommerce-input-wrap flex-1">
+                <input
+                  id="newsletter-email"
+                  type="email"
+                  name="email"
+                  required
+                  placeholder="Your email address"
+                  aria-invalid={!!error}
+                  className="w-full bg-white/5 border border-white/15 text-white placeholder-[#666] px-4 py-3.5 text-sm focus:outline-none focus:border-white/50 transition-colors"
+                />
+              </div>
+              <MagneticButton
                 type="submit"
-                className="bg-white text-[#111] px-6 py-3.5 text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#f0f0f0] transition-colors"
+                pull={12}
+                disabled={pending}
+                className="bg-white text-[#111] px-6 py-3.5 text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#f0f0f0] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
               >
-                Subscribe
-              </button>
+                {pending ? (
+                  <>
+                    <motion.span
+                      className="inline-block w-3.5 h-3.5 border-t-2 border-[#111] rounded-full"
+                      animate={{ rotate: 360 }}
+                      transition={{ repeat: Infinity, duration: 0.7, ease: "linear" }}
+                    />
+                    Sending…
+                  </>
+                ) : (
+                  "Subscribe"
+                )}
+              </MagneticButton>
             </form>
           )}
 
-          <p className="text-[#444] text-xs mt-4">No spam. Unsubscribe anytime.</p>
+          {error && <p role="alert" className="text-red-300 text-xs mt-3">{error}</p>}
+          <p className="text-[#666] text-xs mt-4">No spam. Unsubscribe anytime.</p>
         </motion.div>
       </div>
     </section>

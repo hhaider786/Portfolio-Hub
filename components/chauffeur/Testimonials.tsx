@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import { MaskedText } from "@/lib/motion/MaskedText";
 
 const testimonials = [
   {
@@ -44,7 +45,7 @@ const testimonials = [
 
 function TestimonialCard({ t }: { t: (typeof testimonials)[0] }) {
   return (
-    <div className="flex-shrink-0 w-80 bg-[#111] border border-[#c9a84c]/10 p-7 mx-3">
+    <div className="chauffeur-testimonial-card flex-shrink-0 w-80 bg-[#111] border border-[#c9a84c]/10 p-7 mx-3">
       <div className="flex gap-1 mb-4">
         {Array.from({ length: 5 }).map((_, i) => (
           <Star key={i} size={14} fill="#c9a84c" className="text-[#c9a84c]" />
@@ -89,7 +90,7 @@ export default function Testimonials() {
           className="text-4xl md:text-5xl font-bold text-white mt-5"
           style={{ fontFamily: "var(--font-playfair-var), Georgia, serif" }}
         >
-          What Our Clients Say
+          <MaskedText delay={0.1} stagger={0.065} duration={0.9}>What Our Clients Say</MaskedText>
         </h2>
       </motion.div>
 

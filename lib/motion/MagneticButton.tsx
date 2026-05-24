@@ -10,6 +10,8 @@ type CommonProps = {
   pull?: number;
   onClick?: () => void;
   "aria-label"?: string;
+  "aria-pressed"?: boolean;
+  disabled?: boolean;
 };
 
 type ButtonProps = CommonProps & { as?: "button"; type?: "button" | "submit" | "reset"; href?: never };
@@ -88,6 +90,9 @@ export function MagneticButton(props: Props) {
     );
   }
 
+  const ariaPressed = props["aria-pressed"];
+  const disabled = props.as === undefined ? props.disabled : undefined;
+
   return (
     <motion.button
       ref={m.ref as React.RefObject<HTMLButtonElement>}
@@ -98,6 +103,8 @@ export function MagneticButton(props: Props) {
       onPointerLeave={m.onPointerLeave}
       onClick={onClick}
       aria-label={ariaLabel}
+      aria-pressed={ariaPressed}
+      disabled={disabled}
     >
       {children}
     </motion.button>

@@ -31,7 +31,7 @@ void main(){
 `;
 
 const FRAG = `
-precision highp float;
+precision mediump float;
 varying vec2 v_uv;
 uniform vec2 u_res;
 uniform float u_time;
@@ -67,7 +67,7 @@ float snoise(vec2 v){
 float fbm(vec2 p){
   float v = 0.0;
   float a = 0.5;
-  for(int i = 0; i < 5; i++){
+  for(int i = 0; i < 3; i++){
     v += a * snoise(p);
     p *= 2.0;
     a *= 0.5;
@@ -163,7 +163,7 @@ export function WebGLHero({ palette = "aurora", className, fallbackImage, speed 
     gl.uniform3fv(uC3, c3);
     gl.uniform1f(uI, intensity);
 
-    let dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    let dpr = Math.min(window.devicePixelRatio || 1, 0.75);
     const resize = () => {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
@@ -179,11 +179,14 @@ export function WebGLHero({ palette = "aurora", className, fallbackImage, speed 
     let raf = 0;
     let last = performance.now();
     let t = 0;
+    let frame = 0;
     let visible = true;
     const io = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }, { threshold: 0 });
     io.observe(canvas);
 
     const tick = (now: number) => {
+      raf = requestAnimationFrame(tick);
+      if (++frame % 2 !== 0) return; // ~30fps
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       if (visible) {
@@ -191,7 +194,6 @@ export function WebGLHero({ palette = "aurora", className, fallbackImage, speed 
         gl.uniform1f(uTime, t);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
       }
-      raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
 

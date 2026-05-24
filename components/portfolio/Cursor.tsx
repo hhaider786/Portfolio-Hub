@@ -14,20 +14,29 @@ export default function Cursor() {
   const mx = useMotionValue(-200);
   const my = useMotionValue(-200);
 
+  // Dot — instant follow
   const dotX = useSpring(mx, { stiffness: 700, damping: 32 });
   const dotY = useSpring(my, { stiffness: 700, damping: 32 });
+
+  // Ring — medium lag
   const ringX = useSpring(mx, { stiffness: 130, damping: 22 });
   const ringY = useSpring(my, { stiffness: 130, damping: 22 });
-  const glowX = useSpring(mx, { stiffness: 40, damping: 20 });
-  const glowY = useSpring(my, { stiffness: 40, damping: 20 });
+
+  // Glow — slow dramatic sweep
+  const glowX = useSpring(mx, { stiffness: 35, damping: 18 });
+  const glowY = useSpring(my, { stiffness: 35, damping: 18 });
+
+  // Trail dots — 2 only to keep spring count low
+  const t0x = useSpring(mx, { stiffness: 400, damping: 28 });
+  const t0y = useSpring(my, { stiffness: 400, damping: 28 });
+  const t1x = useSpring(mx, { stiffness: 180, damping: 24 });
+  const t1y = useSpring(my, { stiffness: 180, damping: 24 });
 
   const enabled = !coarse && !reduced;
 
   useEffect(() => {
     document.body.dataset.cursor = enabled ? "on" : "off";
-    return () => {
-      delete document.body.dataset.cursor;
-    };
+    return () => { delete document.body.dataset.cursor; };
   }, [enabled]);
 
   useEffect(() => {
@@ -74,8 +83,14 @@ export default function Cursor() {
 
   if (!enabled || !visible) return null;
 
+  const trailDots = [
+    { x: t0x, y: t0y, size: 4,   opacity: 0.5 },
+    { x: t1x, y: t1y, size: 3,   opacity: 0.25 },
+  ];
+
   return (
     <>
+      {/* Glow — subtle static indigo, no color shift */}
       <motion.div
         aria-hidden
         className="fixed top-0 left-0 pointer-events-none z-[9990] rounded-full"
@@ -84,18 +99,58 @@ export default function Cursor() {
           y: glowY,
           translateX: "-50%",
           translateY: "-50%",
-          width: hovering ? 320 : 260,
-          height: hovering ? 320 : 260,
-          background: hovering
-            ? "radial-gradient(circle, rgba(99,102,241,0.18) 0%, rgba(139,92,246,0.06) 50%, transparent 70%)"
-            : "radial-gradient(circle, rgba(99,102,241,0.10) 0%, rgba(99,102,241,0.03) 50%, transparent 70%)",
-          transition: "width 0.4s ease, height 0.4s ease, background 0.4s ease",
+          width: 200,
+          height: 200,
+          background: "radial-gradient(circle, rgba(99,102,241,0.18) 0%, rgba(99,102,241,0.04) 55%, transparent 75%)",
         }}
       />
+
+      {/* Trail dots — layered between glow and ring */}
+      {trailDots.map((dot, i) => (
+        <motion.div
+          key={i}
+          aria-hidden
+          className="fixed top-0 left-0 pointer-events-none z-[9995] rounded-full"
+          style={{
+            x: dot.x,
+            y: dot.y,
+            translateX: "-50%",
+            translateY: "-50%",
+            width: dot.size,
+            height: dot.size,
+            background: "rgba(99,102,241,0.8)",
+            opacity: dot.opacity,
+          }}
+        />
+      ))}
+
+      {/* Ring — medium lag */}
+      <motion.div
+        aria-hidden
+        className="fixed top-0 left-0 z-[9999] pointer-events-none rounded-full border"
+        style={{ x: ringX, y: ringY, translateX: "-50%", translateY: "-50%" }}
+        animate={{
+          width:  hovering ? 52 : clicking ? 14 : 32,
+          height: hovering ? 52 : clicking ? 14 : 32,
+          borderColor: "rgba(99,102,241,0.55)",
+        }}
+        transition={{
+          type: "spring",
+          stiffness: clicking ? 500 : 220,
+          damping: clicking ? 30 : 22,
+        }}
+      />
+
+      {/* Dot — instant follow */}
       <motion.div
         aria-hidden
         className="fixed top-0 left-0 z-[9999] pointer-events-none rounded-full"
-        style={{ x: dotX, y: dotY, translateX: "-50%", translateY: "-50%" }}
+        style={{
+          x: dotX,
+          y: dotY,
+          translateX: "-50%",
+          translateY: "-50%",
+        }}
       >
         <motion.div
           className="rounded-full bg-[#6366f1]"
@@ -103,17 +158,6 @@ export default function Cursor() {
           transition={{ duration: 0.1 }}
         />
       </motion.div>
-      <motion.div
-        aria-hidden
-        className="fixed top-0 left-0 z-[9999] pointer-events-none rounded-full border"
-        style={{ x: ringX, y: ringY, translateX: "-50%", translateY: "-50%" }}
-        animate={{
-          width: hovering ? 48 : clicking ? 24 : 36,
-          height: hovering ? 48 : clicking ? 24 : 36,
-          borderColor: hovering ? "rgba(99,102,241,0.9)" : "rgba(99,102,241,0.4)",
-        }}
-        transition={{ duration: 0.18 }}
-      />
     </>
   );
 }

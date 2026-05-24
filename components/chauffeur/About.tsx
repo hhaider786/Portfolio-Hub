@@ -1,8 +1,9 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Shield, Clock, Award, Users } from "lucide-react";
+import { MaskedText } from "@/lib/motion/MaskedText";
 
 const stats = [
   { value: 15, suffix: "+", label: "Years of Excellence" },
@@ -81,6 +82,18 @@ const values = [
   },
 ];
 
+const containerVariants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
+};
+const cardVariant = {
+  hidden: { opacity: 0, y: 36, clipPath: "inset(0 0 100% 0)" },
+  show: {
+    opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)",
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
+  },
+};
+
 export default function About() {
   return (
     <section
@@ -89,15 +102,17 @@ export default function About() {
       style={{ background: "linear-gradient(180deg, #0a0a0a 0%, #0c0c0c 100%)" }}
     >
       <div className="max-w-7xl mx-auto">
-        <motion.div
-          className="grid grid-cols-2 md:grid-cols-4 gap-px bg-[#c9a84c]/10 mb-24 border border-[#c9a84c]/10"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          {stats.map((s) => (
-            <div key={s.label} className="bg-[#0a0a0a] py-10 text-center">
+        {/* Stats grid with individual stagger */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-[#c9a84c]/10 mb-24 border border-[#c9a84c]/10">
+          {stats.map((s, i) => (
+            <motion.div
+              key={s.label}
+              className="bg-[#0a0a0a] py-10 text-center"
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+            >
               <div
                 className="text-4xl md:text-5xl font-bold text-[#c9a84c]"
                 style={{ fontFamily: "var(--font-playfair-var), Georgia, serif" }}
@@ -107,9 +122,9 @@ export default function About() {
               <div className="text-[#666] text-xs tracking-[0.2em] uppercase mt-2">
                 {s.label}
               </div>
-            </div>
+            </motion.div>
           ))}
-        </motion.div>
+        </div>
 
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <motion.div
@@ -142,7 +157,7 @@ export default function About() {
               className="text-4xl md:text-5xl font-bold text-white mb-6"
               style={{ fontFamily: "var(--font-playfair-var), Georgia, serif" }}
             >
-              Redefining Luxury Transportation
+              <MaskedText delay={0.1} stagger={0.065} duration={0.9}>Redefining Luxury Transportation</MaskedText>
             </h2>
             <p className="text-[#888] leading-relaxed mb-5">
               Founded over 15 years ago, Prestige Chauffeur was born from a simple belief: that
@@ -155,17 +170,29 @@ export default function About() {
               the very best.
             </p>
 
-            <div className="grid grid-cols-2 gap-5">
+            <motion.div
+              className="grid grid-cols-2 gap-5"
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+            >
               {values.map(({ icon: Icon, title, description }) => (
-                <div key={title} className="flex gap-3">
+                <motion.div
+                  key={title}
+                  className="flex gap-3 p-3 rounded-xl"
+                  variants={cardVariant}
+                  whileHover={{ y: -3, backgroundColor: "rgba(201,168,76,0.04)" }}
+                  transition={{ duration: 0.2 }}
+                >
                   <Icon size={18} className="text-[#c9a84c] mt-0.5 flex-shrink-0" />
                   <div>
                     <p className="text-white text-sm font-semibold mb-1">{title}</p>
                     <p className="text-[#666] text-xs leading-relaxed">{description}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>

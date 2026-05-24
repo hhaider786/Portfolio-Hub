@@ -16,6 +16,13 @@ const ROLES = [
   "Open to Opportunities",
 ];
 
+const PARTICLES = [
+  { top: "15%", left: "20%", size: 2.5, dur: "9s",  delay: "0s",   color: 0, px: "20px",  py: "-28px", nx: "-14px", ny: "10px"  },
+  { top: "30%", left: "72%", size: 2,   dur: "12s", delay: "1.5s", color: 1, px: "-22px", py: "14px",  nx: "16px",  ny: "-18px" },
+  { top: "62%", left: "13%", size: 2.5, dur: "10s", delay: "0.8s", color: 0, px: "26px",  py: "18px",  nx: "-18px", ny: "-10px" },
+  { top: "76%", left: "62%", size: 2,   dur: "14s", delay: "2s",   color: 1, px: "-16px", py: "-22px", nx: "12px",  ny: "16px"  },
+];
+
 function TermLine({ delay, children }: { delay: number; children: React.ReactNode }) {
   return (
     <motion.div
@@ -79,15 +86,37 @@ export default function Hero() {
     <section id="work" className="relative min-h-screen flex items-center pt-24 pb-16" style={{ overflow: "clip" }}>
       <WebGLHero
         palette="violet"
-        speed={0.5}
-        intensity={1.2}
-        className="absolute inset-0 opacity-50"
+        speed={0.25}
+        intensity={0.7}
+        className="absolute inset-0 opacity-35"
       />
 
       <div className="absolute inset-0 pointer-events-none">
         <div className="orb orb-1" />
         <div className="orb orb-2" />
         <div className="orb orb-3" />
+
+        {/* Floating micro-particles */}
+        {PARTICLES.map((p, i) => (
+          <span
+            key={i}
+            aria-hidden
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              top: p.top,
+              left: p.left,
+              width: p.size,
+              height: p.size,
+              background: p.color === 0 ? "rgba(99,102,241,0.6)" : "rgba(6,182,212,0.5)",
+              "--px": p.px,
+              "--py": p.py,
+              "--nx": p.nx,
+              "--ny": p.ny,
+              animation: `heroParticle ${p.dur} ease-in-out infinite`,
+              animationDelay: p.delay,
+            } as React.CSSProperties}
+          />
+        ))}
       </div>
       <div className="noise-overlay" />
       <div className="grid-overlay" />
@@ -152,7 +181,7 @@ export default function Hero() {
               <MagneticButton
                 as="a"
                 href="#projects"
-                className="group relative px-7 py-3.5 bg-[#6366f1] text-white text-xs tracking-[0.15em] uppercase font-medium overflow-hidden shine hover:bg-[#4f52d8] transition-colors inline-flex items-center gap-2"
+                className="group relative px-7 py-3.5 bg-[#6366f1] text-white text-xs tracking-[0.15em] uppercase font-medium overflow-hidden shine hover:bg-[#4f52d8] transition-colors inline-flex items-center gap-2 rounded-xl"
               >
                 <span>View my work</span>
                 <span aria-hidden className="group-hover:translate-x-1 transition-transform duration-200">→</span>
@@ -162,7 +191,7 @@ export default function Hero() {
                 href="https://github.com/hhaider786"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-7 py-3.5 border border-white/15 text-white/70 text-xs tracking-[0.15em] uppercase hover:border-[#6366f1]/60 hover:text-white transition-all duration-300 inline-flex items-center gap-2"
+                className="px-7 py-3.5 border border-white/15 text-white/70 text-xs tracking-[0.15em] uppercase hover:border-[#6366f1]/60 hover:text-white transition-all duration-300 inline-flex items-center gap-2 rounded-xl"
                 aria-label="GitHub profile"
               >
                 <Code2 size={13} aria-hidden /> GitHub
@@ -170,7 +199,7 @@ export default function Hero() {
               <MagneticButton
                 as="a"
                 href="#contact"
-                className="px-7 py-3.5 border border-white/15 text-white/70 text-xs tracking-[0.15em] uppercase hover:border-[#6366f1]/60 hover:text-white transition-all duration-300 inline-flex items-center gap-2"
+                className="px-7 py-3.5 border border-white/15 text-white/70 text-xs tracking-[0.15em] uppercase hover:border-[#6366f1]/60 hover:text-white transition-all duration-300 inline-flex items-center gap-2 rounded-xl"
               >
                 <Mail size={13} aria-hidden /> Contact
               </MagneticButton>
@@ -216,7 +245,7 @@ export default function Hero() {
                   transform: "scale(1.1)",
                 }}
               />
-              <div className="relative rounded-xl border border-white/8 overflow-hidden shadow-2xl"
+              <div className="relative rounded-2xl border border-white/8 overflow-hidden shadow-2xl"
                 style={{ background: "rgba(10,10,20,0.95)", backdropFilter: "blur(20px)" }}>
                 <div className="flex items-center gap-1.5 px-4 py-3 border-b border-white/5"
                   style={{ background: "rgba(255,255,255,0.02)" }}>
@@ -270,7 +299,7 @@ export default function Hero() {
               </div>
 
               <motion.div
-                className="absolute -top-4 -right-4 bg-[#6366f1] text-white text-[0.6rem] tracking-[0.15em] uppercase px-3 py-1.5 shadow-lg"
+                className="absolute -top-4 -right-4 bg-[#6366f1] text-white text-[0.6rem] tracking-[0.15em] uppercase px-3 py-1.5 shadow-lg rounded-lg"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 2.1, type: "spring" }}
@@ -278,7 +307,7 @@ export default function Hero() {
                 Available now
               </motion.div>
               <motion.div
-                className="absolute -bottom-3 -left-3 border border-[#6366f1]/30 bg-[#08080f] text-white/60 text-[0.6rem] tracking-wider px-3 py-1.5"
+                className="absolute -bottom-3 -left-3 border border-[#6366f1]/30 bg-[#08080f] text-white/60 text-[0.6rem] tracking-wider px-3 py-1.5 rounded-lg"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 2.3, type: "spring" }}
@@ -289,16 +318,27 @@ export default function Hero() {
           </motion.div>
         </div>
 
+        {/* Scroll indicator — line draws then arrow bounces */}
         <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.8 }}
           aria-hidden
         >
-          <span className="text-white/30 text-[0.6rem] tracking-[0.3em] uppercase">Scroll</span>
-          <motion.div animate={{ y: [0, 7, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}>
-            <ArrowDown size={14} className="text-[#6366f1]/60" />
+          <span className="text-white/30 text-[0.6rem] tracking-[0.3em] uppercase mb-1">Scroll</span>
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 40, opacity: 1 }}
+            transition={{ delay: 2.0, duration: 1.0, ease: "easeOut" }}
+            style={{ width: 1, background: "rgba(99,102,241,0.5)" }}
+          />
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: [0, 1, 0.6, 1], y: [0, 5, 0] }}
+            transition={{ delay: 3.1, duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ArrowDown size={12} className="text-[#6366f1]/70" />
           </motion.div>
         </motion.div>
       </div>

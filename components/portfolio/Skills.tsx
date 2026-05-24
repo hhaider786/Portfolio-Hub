@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { MaskedText } from "@/lib/motion/MaskedText";
 
 const skillRows = [
   {
@@ -55,7 +56,7 @@ function SkillMarquee({
 
   return (
     <div
-      className="overflow-hidden py-1 group"
+      className="overflow-hidden py-1 group skills-row-scanner"
       style={{ maskImage: "linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%)" }}
     >
       <div
@@ -78,15 +79,20 @@ function SkillMarquee({
               border: `1px solid ${color}20`,
               background: `${color}0c`,
               color: `${color}cc`,
-              borderRadius: "2px",
+              borderRadius: "8px",
               cursor: "default",
-            }}
+              "--badge-color": `${color}60`,
+              ...(i % 8 === 0 ? {
+                animation: `badgePulse ${4 + (i % 3)}s ease-in-out infinite`,
+                animationDelay: `${(i * 0.9) % 6}s`,
+              } : {}),
+            } as React.CSSProperties}
             onMouseEnter={(e) => {
               const el = e.currentTarget as HTMLElement;
               el.style.background = `${color}22`;
               el.style.borderColor = `${color}60`;
               el.style.color = color;
-              el.style.boxShadow = `0 0 16px ${color}30`;
+              el.style.boxShadow = `0 0 20px ${color}40`;
             }}
             onMouseLeave={(e) => {
               const el = e.currentTarget as HTMLElement;
@@ -118,7 +124,7 @@ export default function Skills() {
             className="text-4xl md:text-5xl font-bold text-white"
             style={{ fontFamily: "var(--font-syne-var), sans-serif" }}
           >
-            Technical Skills
+            <MaskedText delay={0.1} stagger={0.08} duration={0.9}>Technical Skills</MaskedText>
           </h2>
         </motion.div>
       </div>
@@ -132,7 +138,6 @@ export default function Skills() {
             viewport={{ once: true }}
             transition={{ delay: i * 0.1, duration: 0.5 }}
           >
-            {/* Row label */}
             <div className="px-6 mb-2 max-w-6xl mx-auto">
               <span
                 className="text-[0.6rem] tracking-[0.25em] uppercase font-medium"
@@ -146,7 +151,6 @@ export default function Skills() {
         ))}
       </div>
 
-      {/* Bottom note */}
       <motion.p
         className="text-center text-white/20 text-xs mt-12 tracking-wider px-6"
         initial={{ opacity: 0 }}

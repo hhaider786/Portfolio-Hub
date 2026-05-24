@@ -1,8 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import { Tilt3D } from "@/lib/motion/Tilt3D";
 
 const demos = [
   {
@@ -14,6 +16,7 @@ const demos = [
       "Scroll-driven animations, pinned fleet showcase where vehicles crossfade as you scroll, parallax hero, animated features section.",
     tag: "Hospitality & Transport",
     tagColor: "#e5c158",
+    minHeight: 520,
     preview: {
       bg: "#0a0a0a",
       accent: "#e5c158",
@@ -31,6 +34,7 @@ const demos = [
       "Cart drawer with localStorage persistence, live product filters, hover image swap, animated categories grid, View Transition product detail.",
     tag: "Retail & Ecommerce",
     tagColor: "#9ca3af",
+    minHeight: 440,
     preview: {
       bg: "#f5f5f5",
       accent: "#111",
@@ -48,6 +52,7 @@ const demos = [
       "Animated tabbed menu, masonry photo gallery with full keyboard lightbox, reservation form with confirmation state.",
     tag: "Food & Hospitality",
     tagColor: "#e8be63",
+    minHeight: 400,
     preview: {
       bg: "#12100a",
       accent: "#e8be63",
@@ -58,14 +63,31 @@ const demos = [
   },
 ];
 
-function SitePreview({ preview }: { preview: (typeof demos)[0]["preview"] }) {
+function SitePreview({
+  preview,
+  isHovered,
+}: {
+  preview: (typeof demos)[0]["preview"];
+  isHovered: boolean;
+}) {
   const isDark = preview.bg !== "#f5f5f5";
   return (
     <div
-      className="relative overflow-hidden border-b border-white/5"
+      className="relative overflow-hidden border-b border-white/5 rounded-t-2xl"
       style={{ background: preview.bg, height: "180px" }}
       aria-hidden
     >
+      {/* LIVE badge */}
+      <motion.span
+        aria-hidden
+        animate={{ opacity: [1, 0.4, 1] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-3 left-3 z-10 text-[0.5rem] tracking-[0.2em] uppercase px-2 py-0.5 font-bold"
+        style={{ background: "#10b981", color: "#fff", borderRadius: "4px" }}
+      >
+        Live
+      </motion.span>
+
       <div
         className="flex items-center justify-between px-4 py-2.5 border-b"
         style={{ borderColor: `${preview.accent}22` }}
@@ -117,11 +139,31 @@ function SitePreview({ preview }: { preview: (typeof demos)[0]["preview"] }) {
           Explore
         </div>
       </div>
+
+      {/* Hover overlay — "Open site" */}
+      <motion.div
+        className="absolute inset-0 flex items-center justify-center"
+        initial={false}
+        animate={{ opacity: isHovered ? 1 : 0 }}
+        transition={{ duration: 0.22 }}
+        style={{ background: "rgba(0,0,0,0.55)" }}
+      >
+        <motion.span
+          animate={{ y: isHovered ? 0 : 8 }}
+          transition={{ duration: 0.22 }}
+          className="text-white text-xs tracking-[0.2em] uppercase px-4 py-2 flex items-center gap-1.5 font-medium"
+          style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(6px)", borderRadius: "8px" }}
+        >
+          → Open site
+        </motion.span>
+      </motion.div>
     </div>
   );
 }
 
 export default function DemoSites() {
+  const [hoveredDemo, setHoveredDemo] = useState<number | null>(null);
+
   return (
     <section id="demos" className="py-24 px-6 relative section-cv" style={{ background: "#08080f" }}>
       <div className="max-w-6xl mx-auto">
@@ -143,7 +185,7 @@ export default function DemoSites() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
           {demos.map((demo, i) => (
             <motion.div
               key={demo.route}
@@ -151,61 +193,67 @@ export default function DemoSites() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.12, duration: 0.5 }}
-              whileHover={{ y: -6 }}
               className="demo-card-wrap"
+              style={{ minHeight: demo.minHeight }}
+              onHoverStart={() => setHoveredDemo(i)}
+              onHoverEnd={() => setHoveredDemo(null)}
             >
               <Link
                 href={demo.route}
-                className="demo-card group block border border-white/8 bg-white/[0.01] hover:border-[#6366f1]/40 overflow-hidden relative"
+                className="demo-card group flex flex-col border border-white/8 bg-white/[0.01] hover:border-[#6366f1]/40 overflow-hidden relative h-full"
                 aria-label={`Open ${demo.title} — ${demo.subtitle}`}
+                style={{ borderRadius: "16px" }}
               >
-                <SitePreview preview={demo.preview} />
+                <Tilt3D max={8} className="flex flex-col h-full">
+                  <SitePreview preview={demo.preview} isHovered={hoveredDemo === i} />
 
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <span
-                        className="text-[0.55rem] tracking-[0.15em] uppercase px-2 py-0.5 mb-2 inline-block"
-                        style={{
-                          color: demo.tagColor,
-                          background: `${demo.tagColor}1a`,
-                          border: `1px solid ${demo.tagColor}33`,
-                        }}
-                      >
-                        {demo.tag}
-                      </span>
-                      <h3
-                        className="text-white font-semibold text-lg leading-snug"
-                        style={{ fontFamily: "var(--font-syne-var), sans-serif" }}
-                      >
-                        {demo.title}
-                      </h3>
-                      <p className="text-white/45 text-xs">{demo.subtitle}</p>
+                  <div className="p-6 flex flex-col flex-1 rounded-b-2xl">
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <span
+                          className="text-[0.55rem] tracking-[0.15em] uppercase px-2 py-0.5 mb-2 inline-block"
+                          style={{
+                            color: demo.tagColor,
+                            background: `${demo.tagColor}1a`,
+                            border: `1px solid ${demo.tagColor}33`,
+                            borderRadius: "6px",
+                          }}
+                        >
+                          {demo.tag}
+                        </span>
+                        <h3
+                          className="text-white font-semibold text-lg leading-snug"
+                          style={{ fontFamily: "var(--font-syne-var), sans-serif" }}
+                        >
+                          {demo.title}
+                        </h3>
+                        <p className="text-white/45 text-xs">{demo.subtitle}</p>
+                      </div>
+                      <ArrowUpRight
+                        size={18}
+                        aria-hidden
+                        className="text-white/25 group-hover:text-[#6366f1] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all mt-1 flex-shrink-0"
+                      />
                     </div>
-                    <ArrowUpRight
-                      size={18}
-                      aria-hidden
-                      className="text-white/25 group-hover:text-[#6366f1] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all mt-1 flex-shrink-0"
-                    />
-                  </div>
 
-                  <p className="text-white/55 text-sm leading-relaxed mb-4">{demo.description}</p>
+                    <p className="text-white/55 text-sm leading-relaxed mb-4">{demo.description}</p>
 
-                  <div className="flex flex-wrap gap-1.5">
-                    {demo.stack.map((s) => (
-                      <span
-                        key={s}
-                        className="text-[0.58rem] tracking-wide uppercase px-2 py-0.5 text-[#a5b4fc]"
-                        style={{ background: "rgba(99,102,241,0.09)", border: "1px solid rgba(99,102,241,0.2)" }}
-                      >
-                        {s}
-                      </span>
-                    ))}
+                    <div className="flex flex-wrap gap-1.5 mt-auto">
+                      {demo.stack.map((s) => (
+                        <span
+                          key={s}
+                          className="text-[0.58rem] tracking-wide uppercase px-2 py-0.5 text-[#a5b4fc]"
+                          style={{ background: "rgba(99,102,241,0.09)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: "6px" }}
+                        >
+                          {s}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                </Tilt3D>
 
                 <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none rounded-2xl"
                   style={{ background: "linear-gradient(135deg, rgba(99,102,241,0.05), transparent)" }}
                 />
               </Link>
