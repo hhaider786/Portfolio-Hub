@@ -102,8 +102,9 @@ export default function Projects() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
+              className="project-card-wrap"
             >
-              <Tilt3D max={6} className="relative bg-white/[0.02] border border-white/8 p-7 h-full overflow-hidden shine rounded-sm">
+              <Tilt3D max={6} className="project-card relative bg-white/[0.02] border border-white/8 p-7 h-full overflow-hidden shine rounded-sm">
                 <article className="flex flex-col h-full">
                   <header className="flex items-start justify-between gap-3 mb-3">
                     <div>

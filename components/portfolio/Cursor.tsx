@@ -8,7 +8,6 @@ export default function Cursor() {
   const [visible, setVisible] = useState(false);
   const [clicking, setClicking] = useState(false);
   const [hovering, setHovering] = useState(false);
-  const [keyboardActive, setKeyboardActive] = useState(false);
   const coarse = useCoarsePointer();
   const reduced = useReducedMotion();
 
@@ -22,7 +21,7 @@ export default function Cursor() {
   const glowX = useSpring(mx, { stiffness: 40, damping: 20 });
   const glowY = useSpring(my, { stiffness: 40, damping: 20 });
 
-  const enabled = !coarse && !reduced && !keyboardActive;
+  const enabled = !coarse && !reduced;
 
   useEffect(() => {
     document.body.dataset.cursor = enabled ? "on" : "off";
@@ -60,23 +59,16 @@ export default function Cursor() {
     const onDown = () => setClicking(true);
     const onUp = () => setClicking(false);
 
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Tab") setKeyboardActive(true); };
-    const onMouse = () => setKeyboardActive(false);
-
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseover", onOver);
     window.addEventListener("mousedown", onDown);
     window.addEventListener("mouseup", onUp);
-    window.addEventListener("keydown", onKey);
-    window.addEventListener("mousedown", onMouse);
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseover", onOver);
       window.removeEventListener("mousedown", onDown);
       window.removeEventListener("mouseup", onUp);
-      window.removeEventListener("keydown", onKey);
-      window.removeEventListener("mousedown", onMouse);
     };
   }, [enabled, mx, my]);
 

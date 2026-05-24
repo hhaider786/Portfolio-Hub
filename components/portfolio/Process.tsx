@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useTransform, type MotionValue } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence, useTransform, type MotionValue } from "framer-motion";
 import { ScrollScene, ScrollScenePin, useScrollProgress } from "@/lib/motion/ScrollScene";
 import { MorphSVG } from "@/lib/motion/MorphSVG";
 
@@ -34,59 +35,45 @@ const MORPHS = [
   "M50 18 L58 42 L82 42 L62 58 L70 82 L50 66 L30 82 L38 58 L18 42 L42 42 Z",
 ];
 
-function PhaseCard({
-  phase,
-  index,
-  idx,
-}: {
-  phase: (typeof PHASES)[number];
-  index: number;
-  idx: MotionValue<number>;
-}) {
-  const opacity = useTransform(idx, [index - 0.4, index, index + 1, index + 1.4], [0, 1, 1, 0]);
-  const y = useTransform(idx, [index - 0.4, index, index + 1, index + 1.4], [40, 0, 0, -40]);
-  return (
-    <motion.div style={{ opacity, y, position: "absolute" }} className="max-w-md">
-      <p className="text-[#6366f1] text-[0.6rem] tracking-[0.4em] uppercase mb-3">
-        {String(index + 1).padStart(2, "0")} · {phase.label}
-      </p>
-      <h3
-        className="text-4xl md:text-5xl font-bold text-white mb-4"
-        style={{ fontFamily: "var(--font-syne-var), sans-serif" }}
-      >
-        {phase.title}
-      </h3>
-      <p className="text-white/55 text-base leading-relaxed">{phase.body}</p>
-    </motion.div>
-  );
-}
-
-function ScrollHint({ idx }: { idx: MotionValue<number> }) {
-  const opacity = useTransform(idx, (v) => 0.35 + (Math.sin(v * Math.PI) + 1) * 0.1);
-  return (
-    <motion.span
-      aria-hidden
-      style={{ opacity }}
-      className="block mt-32 text-[0.6rem] tracking-[0.4em] uppercase text-white/30"
-    >
-      scroll to advance ↓
-    </motion.span>
-  );
+function useActiveStep(progress: MotionValue<number>): number {
+  const [step, setStep] = useState(0);
+  useEffect(() => {
+    const update = (p: number) => {
+      const next = Math.min(PHASES.length - 1, Math.max(0, Math.floor(p * PHASES.length)));
+      setStep((prev) => (prev === next ? prev : next));
+    };
+    update(progress.get());
+    return progress.on("change", update);
+  }, [progress]);
+  return step;
 }
 
 function Stage() {
   const progress = useScrollProgress();
-  const idx = useTransform(progress, [0, 1], [0, PHASES.length]);
+  const step = useActiveStep(progress);
+  const barWidth = useTransform(progress, (p) => `${Math.min(100, Math.max(0, p * 100))}%`);
+
+  const phase = PHASES[step];
 
   return (
     <ScrollScenePin>
-      <div className="relative h-full w-full flex items-center px-6">
+      <div className="relative h-full w-full flex items-center px-6 overflow-hidden">
         <div className="orb orb-1" />
         <div className="grid-overlay" />
-        <div className="relative z-10 max-w-6xl mx-auto w-full grid lg:grid-cols-2 gap-10 items-center">
+
+        <div className="relative z-10 max-w-6xl mx-auto w-full grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
+          {/* Left: morphing SVG */}
           <div className="relative aspect-square max-w-md mx-auto lg:mx-0 w-full">
-            <div className="absolute inset-0 rounded-full border border-[#6366f1]/15" />
-            <div className="absolute inset-6 rounded-full border border-[#6366f1]/10" />
+            <motion.div
+              className="absolute inset-0 rounded-full border border-[#6366f1]/15"
+              animate={{ rotate: step * 90 }}
+              transition={{ type: "spring", damping: 22, stiffness: 80 }}
+            />
+            <motion.div
+              className="absolute inset-6 rounded-full border border-[#6366f1]/10"
+              animate={{ rotate: -step * 60 }}
+              transition={{ type: "spring", damping: 22, stiffness: 80 }}
+            />
             <div className="absolute inset-0 grid place-items-center">
               <MorphSVG
                 paths={MORPHS}
@@ -97,16 +84,58 @@ function Stage() {
                 duration={6}
               />
             </div>
-            <span aria-hidden className="absolute bottom-2 right-2 text-[0.6rem] tracking-[0.3em] uppercase text-[#a5b4fc]/60">
+            <div className="absolute bottom-2 right-2 text-[0.6rem] tracking-[0.3em] uppercase text-[#a5b4fc]/60">
               process
-            </span>
+            </div>
           </div>
 
-          <div className="relative min-h-[260px]">
-            {PHASES.map((phase, i) => (
-              <PhaseCard key={phase.label} phase={phase} index={i} idx={idx} />
-            ))}
-            <ScrollHint idx={idx} />
+          {/* Right: phase text — only one shown at a time via AnimatePresence */}
+          <div className="relative min-h-[280px]">
+            <p className="text-[#6366f1] text-[0.6rem] tracking-[0.4em] uppercase mb-6">
+              How I work · {step + 1} of {PHASES.length}
+            </p>
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={phase.label}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                className="max-w-md"
+              >
+                <p className="text-[#818cf8] text-[0.7rem] tracking-[0.4em] uppercase mb-3">
+                  {String(step + 1).padStart(2, "0")} · {phase.label}
+                </p>
+                <h3
+                  className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight"
+                  style={{ fontFamily: "var(--font-syne-var), sans-serif" }}
+                >
+                  {phase.title}
+                </h3>
+                <p className="text-white/55 text-base leading-relaxed">{phase.body}</p>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Progress bar */}
+            <div className="mt-12 max-w-md">
+              <div className="h-px bg-white/10 relative overflow-hidden">
+                <motion.div
+                  className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#06b6d4]"
+                  style={{ width: barWidth }}
+                />
+              </div>
+              <div className="mt-3 grid grid-cols-4 gap-2 text-[0.55rem] tracking-[0.2em] uppercase">
+                {PHASES.map((p, i) => (
+                  <span
+                    key={p.label}
+                    className={`transition-colors duration-300 ${i <= step ? "text-[#818cf8]" : "text-white/25"}`}
+                  >
+                    {p.label}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -121,7 +150,7 @@ function Stage() {
 export default function Process() {
   return (
     <section id="process" aria-label="How I work" className="relative" style={{ background: "#08080f" }}>
-      <ScrollScene height="400vh">
+      <ScrollScene height="350vh">
         <Stage />
       </ScrollScene>
     </section>

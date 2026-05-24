@@ -168,8 +168,30 @@ html { scroll-behavior: smooth; }
   background: linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.06) 50%, transparent 75%);
   transform: translateX(-100%);
   transition: transform 0.5s ease;
+  pointer-events: none;
 }
 .shine:hover::after { transform: translateX(100%); }
+
+/* Project card lift + glow on hover */
+.project-card-wrap { perspective: 1000px; }
+.project-card {
+  transition: box-shadow 0.45s ease, border-color 0.45s ease, background 0.45s ease;
+}
+.project-card-wrap:hover .project-card {
+  box-shadow: 0 28px 60px -12px rgba(99,102,241,0.28), 0 12px 24px -8px rgba(139,92,246,0.18);
+  border-color: rgba(99,102,241,0.35);
+  background: rgba(99,102,241,0.04);
+}
+
+/* Demo site card glow on hover */
+.demo-card-wrap { perspective: 1000px; }
+.demo-card {
+  transition: box-shadow 0.45s ease, border-color 0.45s ease;
+}
+.demo-card-wrap:hover .demo-card {
+  box-shadow: 0 30px 60px -12px rgba(99,102,241,0.3), 0 16px 28px -10px rgba(139,92,246,0.18);
+  border-color: rgba(99,102,241,0.5);
+}
 
 /* ─── Portfolio (root /) ─────────────────────────────────────── */
 .portfolio-root {

@@ -2,8 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { ViewTransitionLink } from "@/lib/motion/ViewTransitionLink";
-import { Tilt3D } from "@/lib/motion/Tilt3D";
+import Link from "next/link";
 
 const demos = [
   {
@@ -152,64 +151,64 @@ export default function DemoSites() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.12, duration: 0.5 }}
+              whileHover={{ y: -6 }}
+              className="demo-card-wrap"
             >
-              <Tilt3D max={5} className="rounded-sm overflow-hidden">
-                <ViewTransitionLink
-                  href={demo.route}
-                  className="group block border border-white/8 bg-white/[0.01] hover:border-[#6366f1]/50 transition-all duration-400 overflow-hidden relative"
-                  aria-label={`Open ${demo.title} — ${demo.subtitle}`}
-                >
-                  <SitePreview preview={demo.preview} />
+              <Link
+                href={demo.route}
+                className="demo-card group block border border-white/8 bg-white/[0.01] hover:border-[#6366f1]/40 overflow-hidden relative"
+                aria-label={`Open ${demo.title} — ${demo.subtitle}`}
+              >
+                <SitePreview preview={demo.preview} />
 
-                  <div className="p-6">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <span
-                          className="text-[0.55rem] tracking-[0.15em] uppercase px-2 py-0.5 mb-2 inline-block"
-                          style={{
-                            color: demo.tagColor,
-                            background: `${demo.tagColor}1a`,
-                            border: `1px solid ${demo.tagColor}33`,
-                          }}
-                        >
-                          {demo.tag}
-                        </span>
-                        <h3
-                          className="text-white font-semibold text-lg leading-snug"
-                          style={{ fontFamily: "var(--font-syne-var), sans-serif" }}
-                        >
-                          {demo.title}
-                        </h3>
-                        <p className="text-white/45 text-xs">{demo.subtitle}</p>
-                      </div>
-                      <ArrowUpRight
-                        size={18}
-                        aria-hidden
-                        className="text-white/25 group-hover:text-[#6366f1] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all mt-1 flex-shrink-0"
-                      />
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <span
+                        className="text-[0.55rem] tracking-[0.15em] uppercase px-2 py-0.5 mb-2 inline-block"
+                        style={{
+                          color: demo.tagColor,
+                          background: `${demo.tagColor}1a`,
+                          border: `1px solid ${demo.tagColor}33`,
+                        }}
+                      >
+                        {demo.tag}
+                      </span>
+                      <h3
+                        className="text-white font-semibold text-lg leading-snug"
+                        style={{ fontFamily: "var(--font-syne-var), sans-serif" }}
+                      >
+                        {demo.title}
+                      </h3>
+                      <p className="text-white/45 text-xs">{demo.subtitle}</p>
                     </div>
-
-                    <p className="text-white/55 text-sm leading-relaxed mb-4">{demo.description}</p>
-
-                    <div className="flex flex-wrap gap-1.5">
-                      {demo.stack.map((s) => (
-                        <span
-                          key={s}
-                          className="text-[0.58rem] tracking-wide uppercase px-2 py-0.5 text-[#a5b4fc]"
-                          style={{ background: "rgba(99,102,241,0.09)", border: "1px solid rgba(99,102,241,0.2)" }}
-                        >
-                          {s}
-                        </span>
-                      ))}
-                    </div>
+                    <ArrowUpRight
+                      size={18}
+                      aria-hidden
+                      className="text-white/25 group-hover:text-[#6366f1] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all mt-1 flex-shrink-0"
+                    />
                   </div>
 
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
-                    style={{ background: "linear-gradient(135deg, rgba(99,102,241,0.04), transparent)" }}
-                  />
-                </ViewTransitionLink>
-              </Tilt3D>
+                  <p className="text-white/55 text-sm leading-relaxed mb-4">{demo.description}</p>
+
+                  <div className="flex flex-wrap gap-1.5">
+                    {demo.stack.map((s) => (
+                      <span
+                        key={s}
+                        className="text-[0.58rem] tracking-wide uppercase px-2 py-0.5 text-[#a5b4fc]"
+                        style={{ background: "rgba(99,102,241,0.09)", border: "1px solid rgba(99,102,241,0.2)" }}
+                      >
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+                  style={{ background: "linear-gradient(135deg, rgba(99,102,241,0.05), transparent)" }}
+                />
+              </Link>
             </motion.div>
           ))}
         </div>
