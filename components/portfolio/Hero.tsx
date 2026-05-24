@@ -121,7 +121,7 @@ export default function Hero() {
       <div className="noise-overlay" />
       <div className="grid-overlay" />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 w-full">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 w-full pb-20">
         <div className="grid lg:grid-cols-[1fr_420px] gap-12 xl:gap-20 items-center">
           <div>
             <motion.div
@@ -318,30 +318,31 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Scroll indicator — line draws then arrow bounces */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.8 }}
-          aria-hidden
-        >
-          <span className="text-white/30 text-[0.6rem] tracking-[0.3em] uppercase mb-1">Scroll</span>
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 40, opacity: 1 }}
-            transition={{ delay: 2.0, duration: 1.0, ease: "easeOut" }}
-            style={{ width: 1, background: "rgba(99,102,241,0.5)" }}
-          />
-          <motion.div
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: [0, 1, 0.6, 1], y: [0, 5, 0] }}
-            transition={{ delay: 3.1, duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <ArrowDown size={12} className="text-[#6366f1]/70" />
-          </motion.div>
-        </motion.div>
       </div>
+
+      {/* Scroll indicator — positioned relative to section, not content div */}
+      <motion.div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-1"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.8 }}
+        aria-hidden
+      >
+        <span className="text-white/30 text-[0.6rem] tracking-[0.3em] uppercase mb-1">Scroll</span>
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 40, opacity: 1 }}
+          transition={{ delay: 2.0, duration: 1.0, ease: "easeOut" }}
+          style={{ width: 1, background: "rgba(99,102,241,0.5)" }}
+        />
+        <motion.div
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: [0, 1, 0.6, 1], y: [0, 5, 0] }}
+          transition={{ delay: 3.1, duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <ArrowDown size={12} className="text-[#6366f1]/70" />
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

@@ -109,9 +109,11 @@ html { scroll-behavior: smooth; }
   border: 0;
 }
 
-.section-cv {
-  content-visibility: auto;
-  contain-intrinsic-size: 800px;
+@media (min-width: 768px) {
+  .section-cv {
+    content-visibility: auto;
+    contain-intrinsic-size: 800px;
+  }
 }
 
 /* Hide default cursor only when the custom cursor is active (fine pointer, no keyboard focus). */

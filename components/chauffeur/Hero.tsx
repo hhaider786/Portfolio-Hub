@@ -114,9 +114,9 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator — hidden on mobile to avoid colliding with stats grid */}
       <motion.div
-        className="absolute bottom-28 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
+        className="absolute bottom-28 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2"
         style={{ opacity: heroOpacity }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

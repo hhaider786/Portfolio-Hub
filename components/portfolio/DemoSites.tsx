@@ -194,20 +194,19 @@ export default function DemoSites() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.12, duration: 0.5 }}
               className="demo-card-wrap"
-              style={{ minHeight: demo.minHeight }}
               onHoverStart={() => setHoveredDemo(i)}
               onHoverEnd={() => setHoveredDemo(null)}
             >
               <Link
                 href={demo.route}
-                className="demo-card group flex flex-col border border-white/8 bg-white/[0.01] hover:border-[#6366f1]/40 overflow-hidden relative h-full"
+                className="demo-card group flex flex-col border border-white/8 bg-white/[0.01] hover:border-[#6366f1]/40 overflow-hidden relative"
                 aria-label={`Open ${demo.title} — ${demo.subtitle}`}
                 style={{ borderRadius: "16px" }}
               >
-                <Tilt3D max={8} className="flex flex-col h-full">
+                <Tilt3D max={8} className="flex flex-col">
                   <SitePreview preview={demo.preview} isHovered={hoveredDemo === i} />
 
-                  <div className="p-6 flex flex-col flex-1 rounded-b-2xl">
+                  <div className="p-6 flex flex-col rounded-b-2xl">
                     <div className="flex items-start justify-between mb-2">
                       <div>
                         <span

@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import { useReducedMotion } from "@/lib/motion/useReducedMotion";
+import { useReducedMotion, useCoarsePointer } from "@/lib/motion/useReducedMotion";
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   const reduced = useReducedMotion();
+  const coarse = useCoarsePointer();
 
   useEffect(() => {
-    if (reduced) return;
+    if (reduced || coarse) return;
     let cleanup: (() => void) | undefined;
 
     import("lenis").then(({ default: Lenis }) => {
