@@ -88,8 +88,7 @@ function ProjectCard({ project, i, hoveredCard, setHoveredCard }: {
       whileInView={{ clipPath: "inset(0 0% 0 0)", opacity: 1 }}
       viewport={{ once: true }}
       transition={{ delay: i * 0.12, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-      style={{ gridArea: `c${i}` }}
-      className="project-card-wrap"
+      className="project-card-wrap h-full"
       onMouseEnter={() => setHoveredCard(i)}
       onMouseLeave={() => setHoveredCard(null)}
     >
@@ -215,7 +214,9 @@ export default function Projects() {
           }}
         >
           {projects.map((project, i) => (
-            <ProjectCard key={project.name} project={project} i={i} hoveredCard={hoveredCard} setHoveredCard={setHoveredCard} />
+            <div key={project.name} style={{ gridArea: `c${i}` }} className="h-full">
+              <ProjectCard project={project} i={i} hoveredCard={hoveredCard} setHoveredCard={setHoveredCard} />
+            </div>
           ))}
         </div>
       </div>
