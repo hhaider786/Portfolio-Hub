@@ -5,12 +5,79 @@ export type MenuItem = {
   badges?: ("V" | "GF" | "🌶")[];
 };
 
+export type PizzaFlavor = {
+  name: string;
+  tagline: string;
+  ingredients: string[];
+  price: number;
+  image: string;
+  thumbImage: string;
+  accentColor: string;
+};
+
 export type MenuData = {
   breakfast: MenuItem[];
   lunch: MenuItem[];
   dinner: MenuItem[];
   drinks: MenuItem[];
 };
+
+export const pizzaMenu: PizzaFlavor[] = [
+  {
+    name: "Margherita",
+    tagline: "The Essential Classic",
+    ingredients: ["San Marzano D.O.P. tomato", "Fior di latte mozzarella", "Fresh basil", "Extra virgin olive oil", "Fleur de sel"],
+    price: 18,
+    image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&w=1400&q=85",
+    thumbImage: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&w=700&q=80",
+    accentColor: "#c0392b",
+  },
+  {
+    name: "Truffle & Porcini",
+    tagline: "Forest in Every Bite",
+    ingredients: ["Crème fraîche base", "Porcini mushrooms", "Black truffle shavings", "Fontina cheese", "Fresh thyme", "Truffle oil"],
+    price: 28,
+    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&w=1400&q=85",
+    thumbImage: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&w=700&q=80",
+    accentColor: "#8b6914",
+  },
+  {
+    name: "Prosciutto & Rucola",
+    tagline: "Italian Countryside",
+    ingredients: ["San Marzano tomato", "Buffalo mozzarella", "24-month Prosciutto di Parma", "Wild rocket", "Parmigiano Reggiano", "Lemon oil"],
+    price: 26,
+    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&w=1400&q=85",
+    thumbImage: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&w=700&q=80",
+    accentColor: "#c06050",
+  },
+  {
+    name: "Nduja & Honey",
+    tagline: "Calabrian Fire",
+    ingredients: ["Tomato base", "Smoked scamorza", "Nduja di Spilinga", "Calabrian chilli", "Acacia honey", "Spring onion"],
+    price: 24,
+    image: "https://images.unsplash.com/photo-1528137871618-79d2761e3fd5?auto=format&w=1400&q=85",
+    thumbImage: "https://images.unsplash.com/photo-1528137871618-79d2761e3fd5?auto=format&w=700&q=80",
+    accentColor: "#b34a10",
+  },
+  {
+    name: "Quattro Formaggi",
+    tagline: "Aged to Perfection",
+    ingredients: ["Fior di latte", "Gorgonzola dolce", "Aged Parmigiano Reggiano", "Taleggio", "Toasted walnuts", "Honey drizzle"],
+    price: 22,
+    image: "https://images.unsplash.com/photo-1548369937-47519962c11a?auto=format&w=1400&q=85",
+    thumbImage: "https://images.unsplash.com/photo-1548369937-47519962c11a?auto=format&w=700&q=80",
+    accentColor: "#c9a030",
+  },
+  {
+    name: "Burrata & Tartufo",
+    tagline: "Bianca Luxury",
+    ingredients: ["White crème fraîche base", "Burrata di Andria", "Black truffle oil", "Wild arugula", "Toasted pine nuts", "Aged balsamic"],
+    price: 32,
+    image: "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&w=1400&q=85",
+    thumbImage: "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&w=700&q=80",
+    accentColor: "#d4c09a",
+  },
+];
 
 export const menuData: MenuData = {
   breakfast: [

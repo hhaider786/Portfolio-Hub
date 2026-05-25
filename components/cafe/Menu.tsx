@@ -4,13 +4,15 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { menuData, type MenuItem } from "@/data/menu";
 import { MaskedText } from "@/lib/motion/MaskedText";
+import { PizzaWheel } from "./PizzaWheel";
 
-type Tab = "breakfast" | "lunch" | "dinner" | "drinks";
+type Tab = "breakfast" | "lunch" | "dinner" | "drinks" | "pizza";
 const tabs: { key: Tab; label: string }[] = [
   { key: "breakfast", label: "Breakfast" },
   { key: "lunch", label: "Lunch" },
   { key: "dinner", label: "Dinner" },
   { key: "drinks", label: "Drinks" },
+  { key: "pizza", label: "Pizza" },
 ];
 
 const menuItemVariant = {
@@ -101,22 +103,34 @@ export default function Menu() {
           ))}
         </div>
 
-        {/* Menu items with stagger on tab change */}
+        {/* Menu items / Pizza wheel */}
         <AnimatePresence mode="wait">
-          <motion.ul
-            key={active}
-            className="list-none m-0 p-0"
-            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } } }}
-            initial="hidden"
-            animate="show"
-            exit={{ opacity: 0, y: -12, transition: { duration: 0.2 } }}
-          >
-            {menuData[active].map((item) => (
-              <motion.li key={item.name} variants={menuItemVariant}>
-                <MenuCard item={item} />
-              </motion.li>
-            ))}
-          </motion.ul>
+          {active === "pizza" ? (
+            <motion.div
+              key="pizza"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12, transition: { duration: 0.2 } }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <PizzaWheel />
+            </motion.div>
+          ) : (
+            <motion.ul
+              key={active}
+              className="list-none m-0 p-0"
+              variants={{ hidden: {}, show: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } } }}
+              initial="hidden"
+              animate="show"
+              exit={{ opacity: 0, y: -12, transition: { duration: 0.2 } }}
+            >
+              {menuData[active as Exclude<Tab, "pizza">].map((item) => (
+                <motion.li key={item.name} variants={menuItemVariant}>
+                  <MenuCard item={item} />
+                </motion.li>
+              ))}
+            </motion.ul>
+          )}
         </AnimatePresence>
 
         <p className="text-[#4a3a2a] text-xs text-center mt-10 tracking-wide italic">
